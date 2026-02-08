@@ -1,0 +1,41 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+
+@config "../tailwind.config.js";
+@import "tailwindcss";
+* {
+  font-family: "Roboto", sans-serif;
+}
+
+:root {
+  --color-gold: #c9a44c; /* Gold - for buttons, accents */
+  --color-emerald: #0f3d2e; /* Emerald Green - for highlights, borders */
+  --color-ivory: #fdf6f0; /* Ivory - background */
+  --color-charcoal: #333333; /* Charcoal - main text */
+  --color-warm-gray: #7d7d7d; /* Warm Gray - subtext, meta text */
+}
+
+html {
+  scrollbar-color: var(--color-gold) #ffffff;
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #ffffff;
+}
+
+
+
+::-webkit-scrollbar-thumb {
+  background: #d4af37;
+  border-radius: 999px;
+  border: 0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #c79a2f;
+}

@@ -149,7 +149,7 @@ const Navbar = () => {
                   onMouseEnter={() => setIsProfileOpen(true)}
                   onMouseLeave={() => setIsProfileOpen(false)}
                 >
-                  <button className="p-1 border border-transparent hover:border-[#C5A059]/30 rounded-full transition-all duration-500">
+                  <button className="p-1 border cursor-pointer border-transparent hover:border-[#C5A059]/30 rounded-full transition-all duration-500">
                     <UserCircle
                       size={28}
                       strokeWidth={1.2}
@@ -159,20 +159,20 @@ const Navbar = () => {
 
                   {isProfileOpen && (
                     <div className="absolute right-0 mt-0 w-56 bg-white shadow-[0_10px_40px_rgba(0,0,0,0.08)] py-3 border border-[#E5E0D8] animate-in fade-in slide-in-from-top-2 duration-300">
-                      <div className="px-4 py-2 border-b border-gray-50 mb-2">
+                      <div className="px-4 py-2 border-b font-semibold border-gray-50 mb-2">
                         <p className="text-[12px] uppercase tracking-widest text-gray-400 font-bold">Account</p>
-                        <p className="text-sm font-serif text-[#1A1A1A] truncate">{user.name}</p>
+                        <p className="text-md font-serif text-[#1A1A1A] truncate">{user.name}</p>
                       </div>
                       <Link
                         to="/my-bookings"
-                        className="flex items-center px-4 py-2.5 text-xs tracking-wider text-gray-600 hover:bg-[#FAF9F6] hover:text-[#C5A059] transition-colors"
+                        className="flex items-center px-4 font-semibold py-2.5 text-xs tracking-wider text-gray-600 hover:bg-[#FAF9F6] hover:text-[#C5A059] transition-colors"
                       >
                         <Calendar size={16} className="mr-3 opacity-70" />
                         MY BOOKINGS
                       </Link>
                       <Link
                         to="/my-orders"
-                        className="flex items-center px-4 py-2.5 text-xs tracking-wider text-gray-600 hover:bg-[#FAF9F6] hover:text-[#C5A059] transition-colors"
+                        className="flex items-center px-4 py-2.5 font-semibold text-xs tracking-wider text-gray-600 hover:bg-[#FAF9F6] hover:text-[#C5A059] transition-colors"
                       >
                         <Package size={16} className="mr-3 opacity-70" />
                         MY ORDERS

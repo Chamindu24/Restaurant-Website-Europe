@@ -10,7 +10,7 @@ const AppContextProvider = ({ children }) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
-  const [admin, setAdmin] = useState(null);
+  const [admin, setAdmin] = useState(false);
   const [categories, setCategories] = useState([]);
   const [menus, setMenus] = useState([]);
 
@@ -104,8 +104,22 @@ const AppContextProvider = ({ children }) => {
     }
   };
 
+  const adminIsAuth = async () => {
+    try {
+      const { data } = await axios.get("/api/auth/admin/is-auth");
+      if (data.success) {
+        setAdmin(true);
+      } else {
+        setAdmin(false);
+      }
+    } catch (error) {
+      setAdmin(false);
+    }
+  };
+
   useEffect(() => {
     isAuth();
+    adminIsAuth();
     fetchCategories();
     fetchMenus();
     fetchCartData();

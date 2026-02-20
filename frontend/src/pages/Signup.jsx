@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Scroll, Fingerprint, ShieldCheck, ArrowRight, ArrowLeft, Table, LogIn, ChefHat } from "lucide-react";
 import { AppContext } from "../context/AppContext";
 import { toast } from "react-hot-toast";
+import { Link } from "react-router-dom";
 
 const Auth = () => {
   const { loading, setLoading, axios, setUser, navigate } = useContext(AppContext);
@@ -67,12 +68,13 @@ const Auth = () => {
         {/* LEFT PANEL: CONTENT (40%) */}
         <div className="w-full md:w-[45%] h-full bg-[#1A1A1A] p-12 md:p-20 flex flex-col justify-between text-white relative">
           <div className="relative z-10">
-            <div className="flex items-center gap-3 mb-12">
+            <Link to="/" className="flex items-center gap-3 mb-12">
               <ChefHat className="text-[#da9746]" size={24} />
               <span className="text-[12px] tracking-[0.5em] font-bold uppercase text-[#da9746]">
                 Black Pepper
               </span>
-            </div>
+            </Link>
+
 
             <AnimatePresence mode="wait">
               <motion.div

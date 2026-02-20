@@ -23,8 +23,9 @@ export const adminOnly=(req,res,next)=>{
       const decoded=jwt.verify(token,process.env.JWT_SECRET);
       req.admin=decoded;
       if(req.admin.email===process.env.ADMIN_EMAIL){
-         next();
+         return next();
       }
+      return res.status(403).json({ message: "Admin access required", success: false });
    } catch (error) {
            res.status(401).json({ message: "Invalid token" });
    }

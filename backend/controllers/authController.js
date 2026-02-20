@@ -149,3 +149,11 @@ export const isAuth = async (req, res) => {
     return res.json({ message: "Internal server error", success: false });
   }
 };
+
+export const adminIsAuth = async (req, res) => {
+  try {
+    return res.json({ success: true, admin: true });
+  } catch (error) {
+    return res.json({ message: "Internal server error", success: false });
+  }
+};

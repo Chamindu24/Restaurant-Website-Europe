@@ -42,7 +42,7 @@ const AddCategory = () => {
     }
   };
   return (
-    <div className="py-12">
+    <div className="py-12 flex flex-col items-center justify-center">
       <form
         onSubmit={handleSubmit}
         className="max-w-md w-full flex flex-col gap-5"

@@ -5,7 +5,6 @@ import { toast } from "react-hot-toast";
 const Orders = () => {
   const { admin, axios, loading, setLoading } = useContext(AppContext);
   const [orders, setOrders] = useState([]);
-  console.log("orders", orders);
 
   const fecthOrders = async () => {
     try {
@@ -65,16 +64,16 @@ const Orders = () => {
             <li key={item._id} className="border rounded-lg p-3 md:p-2">
               <div className="flex flex-col md:grid md:grid-cols-5 md:items-center gap-2 md:gap-0">
                 <p className="font-medium text-center md:text-left">
-                  {item?.user.name}
+                  {item?.user?.name || "Unknown"}
                 </p>
                 <p className="font-medium text-center md:text-left">
-                  {item?.address}
+                  {item?.address || "N/A"}
                 </p>
                 <p className="text-gray-600 hidden md:block">
-                  ${item?.totalAmount}
+                  ${item?.totalAmount || "0"}
                 </p>
                 <p className="text-gray-600 hidden md:block">
-                  {item.paymentMethod}
+                  {item?.paymentMethod || "N/A"}
                 </p>
 
                 <div className="flex justify-center md:justify-start items-center gap-2 md:gap-5 mt-2 md:mt-0">
@@ -95,27 +94,33 @@ const Orders = () => {
               </div>
               {/* ✅ Render Menu Items */}
               <div className="mt-3">
-                {item.items.map((menu, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center gap-3 bg-gray-50 border rounded-lg p-2 my-2"
-                  >
-                    <img
-                      src={menu?.menuItem?.image}
-                      alt={menu?.menuItem?.name}
-                      className="w-16 h-16 rounded object-cover"
-                    />
-                    <div>
-                      <p className="font-semibold">{menu?.menuItem?.name}</p>
-                      <p className="text-sm text-gray-600">
-                        QTY:{menu?.quantity}
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        $:{menu?.menuItem?.price}
-                      </p>
+                {item?.items?.length > 0 ? (
+                  item.items.map((menu, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center gap-3 bg-gray-50 border rounded-lg p-2 my-2"
+                    >
+                      <img
+                        src={menu?.menuItem?.image}
+                        alt={menu?.menuItem?.name}
+                        className="w-16 h-16 rounded object-cover"
+                      />
+                      <div>
+                        <p className="font-semibold">
+                          {menu?.menuItem?.name || "Item"}
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          QTY: {menu?.quantity || 0}
+                        </p>
+                        <p className="text-sm text-gray-600">
+                          $: {menu?.menuItem?.price || 0}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))
+                ) : (
+                  <p className="text-gray-500 text-sm">No items</p>
+                )}
               </div>
             </li>
           ))}

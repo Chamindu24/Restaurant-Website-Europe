@@ -5,7 +5,7 @@ const Loading = () => {
     <div className="fixed inset-0 z-[999] flex flex-col items-center justify-center bg-[#FDF6F0]">
       
       {/* Premium Loading Container */}
-      <div className="relative mb-10 flex items-center justify-center">
+      <div className="relative  flex items-center justify-center">
        
         {/* Icons Row */}
         <div className="flex items-center gap-4 animate-pulse [animation-duration:2.5s] font-serif text-black">

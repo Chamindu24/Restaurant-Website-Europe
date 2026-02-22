@@ -16,6 +16,7 @@ const AppContextProvider = ({ children }) => {
 
   const [cart, setCart] = useState({ items: [] });
   const [totalPrice, setTotalPrice] = useState(0);
+  const [activeOffersCount, setActiveOffersCount] = useState(0);
 
   // 🔹 Initialize guest cart from localStorage on app load
   useEffect(() => {
@@ -215,6 +216,18 @@ const AppContextProvider = ({ children }) => {
     }
   };
 
+  const fetchActiveOffersCount = async () => {
+    try {
+      const { data } = await axios.get("/api/offer/all");
+      if (data.success) {
+        const activeCount = data.offers.filter((offer) => offer.isActive).length;
+        setActiveOffersCount(activeCount);
+      }
+    } catch (error) {
+      console.log("Error fetching offers:", error);
+    }
+  };
+
   const isAuth = async () => {
     try {
       const { data } = await axios.get("/api/auth/is-auth");
@@ -268,6 +281,7 @@ const AppContextProvider = ({ children }) => {
     adminIsAuth();
     fetchCategories();
     fetchMenus();
+    fetchActiveOffersCount();
   }, []);
 
   // Fetch server cart when user logs in
@@ -297,6 +311,7 @@ const AppContextProvider = ({ children }) => {
     cart,
     totalPrice,
     fetchCartData,
+    activeOffersCount,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

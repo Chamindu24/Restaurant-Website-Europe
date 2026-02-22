@@ -17,7 +17,8 @@ import {
   BarChart3,
   Bell,
   Search,
-  ChefHatIcon
+  ChefHatIcon,
+  Tag
 } from "lucide-react";
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { toast } from "react-hot-toast";
@@ -34,6 +35,8 @@ const AdminLayout = () => {
     { path: "/admin/categories", name: "All Categories", icon: Layers },
     { path: "/admin/add-menu", name: "Add New Menu", icon: Package },
     { path: "/admin/menus", name: "All Menus", icon: Package },
+    { path: "/admin/add-offer", name: "Create Offer", icon: Tag },
+    { path: "/admin/offers", name: "All Offers", icon: Tag },
     { path: "/admin/orders", name: " Orders", icon: ShoppingBag },
     { path: "/admin/bookings", name: "Bookings", icon: CalendarCheck },
 
@@ -49,6 +52,7 @@ const AdminLayout = () => {
         setAdmin(false);
       }
     } catch (error) {
+      console.error("Logout failed:", error);
       toast.error("Logout failed");
     }
   };
@@ -150,7 +154,7 @@ const AdminLayout = () => {
               <span className="absolute -top-1 -right-1 w-2 h-2 bg-amber-500 rounded-full border-2 border-white" />
             </button>
 
-            <div className="h-6 w-[1px] bg-stone-200 mx-2" />
+            <div className="h-6 w-px bg-stone-200 mx-2" />
 
             <button 
               onClick={logout}

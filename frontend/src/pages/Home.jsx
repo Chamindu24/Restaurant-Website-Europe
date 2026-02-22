@@ -2,6 +2,7 @@ import AboutSection from "../components/AboutSection";
 import Categories from "../components/Categories";
 import Hero from "../components/Hero";
 import Menus from "../components/Menus";
+import Offers from "../components/Offers";
 import Testimonial from "../components/Testimonial";
 
 const Home = () => {
@@ -11,6 +12,7 @@ const Home = () => {
       <main className="relative z-20">
         <Categories />
         <Menus />
+        <Offers />
         <AboutSection />
         <Testimonial />
       </main>

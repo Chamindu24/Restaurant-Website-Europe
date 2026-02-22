@@ -9,6 +9,7 @@ import BookTable from "./pages/BookTable";
 import MyBookings from "./pages/MyBookings";
 import MyOrders from "./pages/MyOrders";
 import Signup from "./pages/Signup";
+import Rewards from "./pages/Rewards";
 import Navbar from "./components/Navbar";
 import { Toaster } from "react-hot-toast";
 import Footer from "./components/Footer";
@@ -19,8 +20,10 @@ import Loading from "./components/Loading";
 import AdminLogin from "./pages/admin/AdminLogin";
 import AddCategory from "./pages/admin/AddCategory";
 import AddMenu from "./pages/admin/AddMenu";
+import AddOffer from "./pages/admin/AddOffer";
 import Categories from "./pages/admin/Categories";
 import Menus from "./pages/admin/Menus";
+import Offers from "./pages/admin/Offers";
 import Orders from "./pages/admin/Orders";
 import Bookings from "./pages/admin/Bookings";
 import Dashboard from "./pages/admin/Dashboard";
@@ -50,6 +53,7 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/menu" element={<Menu />} />
         <Route path="/menu-details/:id" element={<MenuDetails />} />
+        <Route path="/rewards" element={<Rewards />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
@@ -80,8 +84,20 @@ const App = () => {
             element={admin ? <AddMenu /> : <AdminLogin />}
           />
           <Route
+            path="add-offer"
+            element={admin ? <AddOffer /> : <AdminLogin />}
+          />
+          <Route
+            path="edit-offer/:id"
+            element={admin ? <AddOffer /> : <AdminLogin />}
+          />
+          <Route
             path="categories"
             element={admin ? <Categories /> : <AdminLogin />}
+          />
+          <Route
+            path="offers"
+            element={admin ? <Offers /> : <AdminLogin />}
           />
           <Route path="menus" element={admin ? <Menus /> : <AdminLogin />} />
           <Route path="orders" element={admin ? <Orders /> : <AdminLogin />} />

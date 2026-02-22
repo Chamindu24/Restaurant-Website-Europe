@@ -9,11 +9,12 @@ import {
   UserCircle,
   Menu,
   X,
+  Tag,
 } from "lucide-react";
 import toast from "react-hot-toast";
 
 const Navbar = () => {
-  const { navigate, user, setUser, axios, cartCount } = useContext(AppContext);
+  const { navigate, user, setUser, axios, cartCount, activeOffersCount } = useContext(AppContext);
   const location = useLocation();
   const isHome = location.pathname === "/";
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -78,6 +79,7 @@ const Navbar = () => {
   const navLinks = [
     { name: "Home", path: "/" },
     { name: "Menus", path: "/menu" },
+    { name: "Rewards", path: "/rewards" },
     { name: "Book Table", path: "/book-table" },
     { name: "Contact", path: "/contact" },
   ];
@@ -114,13 +116,18 @@ const Navbar = () => {
                 <Link
                   key={link.name}
                   to={link.path}
-                  className={`transition-all duration-300 font-serif italic text-md tracking-[0.2em] uppercase font-extrabold ${
+                  className={`relative transition-all duration-300 font-serif italic text-md tracking-[0.2em] uppercase font-extrabold ${
                     isScrolled
                       ? "text-[#1f1e1e] hover:text-[#C5A059]"
                       : "text-[#EDEDED] hover:text-[#C5A059]"
                   }`}
                 >
                   {link.name}
+                  {link.name === "Rewards" && activeOffersCount > 0 && (
+                    <span className="absolute -top-2 -right-4 bg-[#C5A059] text-white text-[9px] rounded-full w-4 h-4 flex items-center justify-center font-bold shadow-sm">
+                      {activeOffersCount}
+                    </span>
+                  )}
                 </Link>
               ))}
             </div>
@@ -257,10 +264,15 @@ const Navbar = () => {
                 key={link.name}
                 to={link.path}
                 onClick={() => setIsMenuOpen(false)}
-                className="py-4 border-b border-[#E5E0D8] text-[#2A2A2A] text-sm tracking-[0.25em] uppercase font-serif italic font-semibold hover:text-[#C5A059] transition-colors"
+                className="py-4 border-b border-[#E5E0D8] text-[#2A2A2A] text-sm tracking-[0.25em] uppercase font-serif italic font-semibold hover:text-[#C5A059] transition-colors flex items-center justify-between"
                 style={{ transitionDelay: isMenuOpen ? `${i * 60}ms` : "0ms" }}
               >
-                {link.name}
+                <span>{link.name}</span>
+                {link.name === "Rewards" && activeOffersCount > 0 && (
+                  <span className="bg-[#C5A059] text-white text-[10px] rounded-full px-2 py-0.5 font-bold">
+                    {activeOffersCount}
+                  </span>
+                )}
               </Link>
             ))}
 

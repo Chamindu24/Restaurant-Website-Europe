@@ -15,7 +15,29 @@ const MenuCard = ({ menu }) => {
         className="w-full h-full object-cover transition-transform duration-[2s] group-hover:scale-105"
       />
       
+      {/* TOP LEFT - London Royal Red Offer Badge */}
+      {menu.offers && menu.offers.length > 0 && (
+        <div className="absolute top-7 left-4 z-20">
+          <div className="relative group">
+            {/* Subtle soft red glow instead of harsh gold */}
+            <div className="absolute inset-0 bg-red-200/50 blur-md rounded-full scale-110 group-hover:bg-red-300/60 transition-all duration-700"></div>
+            
+            {/* Main Badge: Deep Wine to Royal Red */}
+            <div className="relative bg-gradient-to-br from-[#921111] via-[#b91c1c] to-[#7f1d1d] px-2 py-1.5 rounded-sm border border-red-400/30 shadow-[0_4px_15px_rgba(153,27,27,0.4)]">
+              <div className="flex flex-col items-center">
 
+                
+                <div className="flex items-center gap-2 border-t border-white/20 pt-0.5">
+                  <span className="text-white text-[10px]  font-bold uppercase ">
+                    {menu.offers.length > 1 ? `${menu.offers.length} Bonus Offers` : 'Your Reward Awaits!'}
+                  </span>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      )}
 
       {/* TOP RIGHT - Floating Glass Heart (Favorite) */}
       <div className="absolute top-6 right-6 z-20">
@@ -76,7 +98,7 @@ const MenuCard = ({ menu }) => {
               Just
             </span>
             <div className="flex items-baseline gap-1">
-              <span className="text-xl font-serif font-bold italic text-amber-700">£</span>
+              <span className="text-2xl font-serif font-bold italic text-amber-700">£</span>
               <span className="text-3xl font-black text-stone-900 font-serif tracking-tighter">
                 {menu.price}
               </span>
@@ -114,8 +136,6 @@ const MenuCard = ({ menu }) => {
         </div>
     </div>
 
-    {/* Royal Gold Line - Only visible on hover at the very top */}
-    <div className="absolute top-0 left-0 w-0 h-1 bg-amber-500 transition-all duration-700 group-hover:w-full" />
   </div>
   );
 };

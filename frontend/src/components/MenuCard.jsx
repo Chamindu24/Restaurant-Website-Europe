@@ -43,11 +43,11 @@ const MenuCard = ({ menu }) => {
                   </span>
                 </div>
                 {bestOffer && (
-                  <div className="border-t border-white/20 w-full ">
+                  <div className="border-t border-white/20 w-full pt-1">
                     <p className="text-yellow-200 text-[9px] font-semibold capitalize">
                       {bestOffer.title}
                     </p>
-                    <p className="text-white font-bold text-[10px] ">
+                    <p className="text-white text-[8px] mt-0.5">
                       Save £{bestOffer.discountAmount.toFixed(2)}
                     </p>
                   </div>
@@ -118,25 +118,25 @@ const MenuCard = ({ menu }) => {
               {bestOffer ? "Save Now" : "Just"}
             </span>
             
+
+            
+            <div className="flex items-baseline gap-0.5 sm:gap-1">
+              <span className={`font-serif font-bold italic ${bestOffer ? 'text-xl sm:text-3xl text-red-600' : 'text-xl sm:text-3xl text-amber-700'}`}>
+                £
+              </span>
+              <span className={`font-black font-serif tracking-tighter ${bestOffer ? 'text-3xl sm:text-4xl text-red-600 drop-shadow-lg' : 'text-3xl sm:text-4xl text-stone-900'}`}>
+                {bestOffer ? discountedPrice.toFixed(2) : menu.price}
+              </span>
+
             {bestOffer && (
-              <div className="flex items-center gap-1 sm:gap-2">
-                <span className="text-base sm:text-xl font-serif font-bold text-stone-400 line-through">
+              <div className="flex items-center pl-2">
+                <span className="text-base sm:text-2xl font-serif font-bold text-stone-400 line-through">
                   £{menu.price}
                 </span>
 
-                <div className="flex items-baseline gap-0.5 sm:gap-1">
-                  <span className={`font-serif font-bold italic ${bestOffer ? 'text-xl sm:text-3xl text-red-600' : 'text-lg sm:text-2xl text-amber-700'}`}>
-                    £
-                  </span>
-                  <span className={`font-black font-serif tracking-tighter ${bestOffer ? 'text-3xl sm:text-4xl text-red-600 drop-shadow-lg' : 'text-3xl sm:text-4xl text-stone-900'}`}>
-                    {bestOffer ? discountedPrice.toFixed(2) : menu.price}
-                  </span>
-                </div>
-
               </div>
             )}
-            
-
+            </div>
 
             {/* All Offers Info */}
             {offersWithValues.length > 1 && (

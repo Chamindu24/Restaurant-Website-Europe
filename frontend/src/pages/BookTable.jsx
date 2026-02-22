@@ -211,26 +211,26 @@ const BookTable = () => {
             <h2 className="text-md uppercase font-medium tracking-widest text-gray-800 mb-8 border-b pb-4">02. Select Your Table & Seats</h2>
             
 
-            <div className="text-center mb-16">
+<div className="text-center mb-8 md:mb-16">
               <p className="text-[11px] font-black uppercase tracking-[0.3em] text-[#bc9437] mb-2">Step 01</p>
-              <h2 className="text-4xl font-serif font-black text-[#1a1a1a] tracking-tight italic underline decoration-[#bc9437] decoration-4 underline-offset-8">
+              <h2 className="text-3xl md:text-4xl font-serif font-black text-[#1a1a1a] tracking-tight italic underline decoration-[#bc9437] decoration-4 underline-offset-8">
                 Select Your Table 
               </h2>
             </div>
             {/* Table Navigator - The "Chronograph" Tabs */}
-            <div className="flex justify-center gap-6 mb-24">
+            <div className="flex flex-wrap justify-center gap-4 md:gap-6 mb-12 md:mb-24">
               {tableIDs.map((id) => (
                 <button
                   key={id}
                   onClick={() => setActiveTable(id)}
-                  className={`group cursor-pointer relative w-20 h-20 flex items-center justify-center transition-all duration-500
+                  className={`group cursor-pointer relative w-14 h-14 md:w-20 md:h-20 flex items-center justify-center transition-all duration-500
                     ${activeTable === id ? "scale-125" : "grayscale opacity-40 hover:opacity-100 hover:grayscale-0"}`}
                 >
                   {/* Background Ring */}
                   <div className={`absolute inset-0 rounded-full border-[3px] transition-all duration-500
                     ${activeTable === id ? "border-[#bc9437] border-[4px] bg-[#1a1a1a] text-[#bc9437] rotate-180" : "border-gray-500"}`} 
                   />
-                  <span className={`relative z-10 text-2xl font-serif font-black transition-colors duration-500
+                  <span className={`relative z-10 text-xl md:text-2xl font-serif font-black transition-colors duration-500
                     ${activeTable === id ? "text-[#bc9437]" : "text-[#1a1a1a]"}`}>
                     {id}
                   </span>
@@ -241,24 +241,24 @@ const BookTable = () => {
               ))}
             </div>
 
-            <div className="text-center mb-16">
+            <div className="text-center mb-8 md:mb-16">
               <p className="text-[11px] font-black uppercase tracking-[0.3em] text-[#bc9437] mb-2">Step 02</p>
-              <h2 className="text-4xl font-serif font-black text-[#1a1a1a] tracking-tight italic underline decoration-[#bc9437] decoration-4 underline-offset-8">
+              <h2 className="text-3xl md:text-4xl font-serif font-black text-[#1a1a1a] tracking-tight italic underline decoration-[#bc9437] decoration-4 underline-offset-8">
                 Allocate Seats
               </h2>
             </div>
 
             {/* The Radial Floor Plan - Architectural Polish */}
-            <div className="relative w-[600px] h-[600px] mx-auto flex items-center justify-center">
+            <div className="relative w-[320px] h-[320px] md:w-[600px] md:h-[600px] mx-auto flex items-center justify-center">
               
               {/* Inner Orbit Ring (Visual Guide) */}
-              <div className="absolute w-[360px] h-[360px] rounded-full border-[1px] border-dashed border-[#bc9437] pointer-events-none" />
+              <div className="absolute w-[190px] h-[190px] md:w-[360px] md:h-[360px] rounded-full border-[1px] border-dashed border-[#bc9437] pointer-events-none" />
 
               {/* The Central Table (The Heavy Anchor) */}
-              <div className="absolute w-72 h-72 rounded-full bg-[#1a1a1a] border-[4px] border-[#bc9437] shadow-[0_30px_70px_rgba(0,0,0,0.1)] flex flex-col items-center justify-center z-10">
+              <div className="absolute w-32 h-32 md:w-72 md:h-72 rounded-full bg-[#1a1a1a] border-[4px] border-[#bc9437] shadow-[0_30px_70px_rgba(0,0,0,0.1)] flex flex-col items-center justify-center z-10">
                     <div className="text-center">
-                        <p className="text-[12px] font-black uppercase tracking-[0.3em] text-[#bc9437] mb-1">Table</p>
-                        <p className="font-serif font-black text-7xl text-[#bc9437]">{activeTable}</p>
+                        <p className="text-[9px] md:text-[12px] font-black uppercase tracking-[0.3em] text-[#bc9437] mb-1">Table</p>
+                        <p className="font-serif font-black text-4xl md:text-7xl text-[#bc9437]">{activeTable}</p>
                     </div>
               </div>
 
@@ -269,7 +269,8 @@ const BookTable = () => {
                 const isBooked = selectedDateForBooking && bookedSeats.includes(seatId);
                 
                 const angle = (i * 360) / 9;
-                const radius = 240; // Increased radius for more "breathing room"
+                const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+                const radius = isMobile ? 128 : 240;
                 const x = Math.cos((angle * Math.PI) / 180) * radius;
                 const y = Math.sin((angle * Math.PI) / 180) * radius;
 
@@ -279,24 +280,22 @@ const BookTable = () => {
                     disabled={isBooked}
                     onClick={() => toggleSeat(activeTable, i)}
                     style={{ transform: `translate(${x}px, ${y}px)` }}
-                    className={`absolute cursor-pointer w-20 h-20 rounded-none transition-all duration-500 flex flex-col items-center justify-center border-[4px]
+                    className={`absolute cursor-pointer w-10 h-10 md:w-20 md:h-20 rounded-none transition-all duration-500 flex flex-col items-center justify-center border-[2px] md:border-[4px]
                       ${isBooked 
                         ? "bg-red-200 border-gray-300 opacity-60 cursor-not-allowed" 
                         : isSelected 
                         ? "bg-[#1a1a1a] border-[#bc9437] shadow-[20px_20px_40px_rgba(0,0,0,0.2)] scale-110 z-20" 
                         : "bg-white border-[#1a1a1a] hover:border-[#bc9437] hover:-translate-y-2"}`}
                   >
-
-                    
-                    <span className={`text-2xl font-serif font-black italic
+                    <span className={`text-sm md:text-2xl font-serif font-black italic
                         ${isSelected ? "text-white" : "text-[#1a1a1a]"}`}>
                         {i + 1}
                     </span>
                     
                     {/* Selected Accent: Geometric Diamond */}
                     {isSelected && (
-                        <div className="absolute -top-3 -right-3 w-6 h-6 bg-[#bc9437] rotate-45 flex items-center justify-center shadow-lg border-2 border-[#1a1a1a]">
-                            <span className="text-[10px] text-[#1a1a1a] -rotate-45 font-black">✓</span>
+                        <div className="absolute -top-2 -right-2 md:-top-3 md:-right-3 w-4 h-4 md:w-6 md:h-6 bg-[#bc9437] rotate-45 flex items-center justify-center shadow-lg border border-[#1a1a1a] md:border-2">
+                            <span className="text-[8px] md:text-[10px] text-[#1a1a1a] -rotate-45 font-black">✓</span>
                         </div>
                     )}
                   </button>

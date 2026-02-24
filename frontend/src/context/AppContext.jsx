@@ -13,12 +13,14 @@ const AppContextProvider = ({ children }) => {
   const [admin, setAdmin] = useState(false);
   const [categories, setCategories] = useState([]);
   const [menus, setMenus] = useState([]);
+  const [offers, setOffers] = useState([]);
 
   const [cart, setCart] = useState({ items: [] });
   const [totalPrice, setTotalPrice] = useState(0);
   const [activeOffersCount, setActiveOffersCount] = useState(0);
   const [authChecked, setAuthChecked] = useState(false);
   const [menusLoaded, setMenusLoaded] = useState(false);
+  const [offersLoaded, setOffersLoaded] = useState(false);
   const [guestCartMerged, setGuestCartMerged] = useState(false);
   const [guestCartLoaded, setGuestCartLoaded] = useState(false);
 
@@ -285,6 +287,24 @@ const AppContextProvider = ({ children }) => {
     }
   };
 
+  const fetchOffers = async () => {
+    try {
+      setLoading(true);
+      const { data } = await axios.get("/api/offer/all");
+      if (data.success) {
+        setOffers(data.offers || []);
+        const activeCount = data.offers.filter((offer) => offer.isActive).length;
+        setActiveOffersCount(activeCount);
+        setOffersLoaded(true);
+      }
+    } catch (error) {
+      console.log("Error fetching offers:", error);
+      setOffersLoaded(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const fetchActiveOffersCount = async () => {
     try {
       const { data } = await axios.get("/api/offer/all");
@@ -366,7 +386,7 @@ const AppContextProvider = ({ children }) => {
     adminIsAuth();
     fetchCategories();
     fetchMenus();
-    fetchActiveOffersCount();
+    fetchOffers();
   }, []);
 
   const value = {
@@ -382,6 +402,9 @@ const AppContextProvider = ({ children }) => {
     fetchCategories,
     menus,
     fetchMenus,
+    offers,
+    fetchOffers,
+    offersLoaded,
     addToCart,
     removeFromCart,
     updateQuantity,

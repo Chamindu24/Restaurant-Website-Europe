@@ -1,14 +1,113 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
-import { ArrowLeft, ShoppingCart, Minus, Plus, Tag, Award } from "lucide-react";
+import { ArrowLeft, ShoppingCart, Minus, Plus, Tag, Award, Star } from "lucide-react";
+import { toast } from "react-hot-toast";
 
 const MenuDetails = () => {
   const { id } = useParams();
-  const { menus, navigate, addToCart } = useContext(AppContext);
+  const { menus, navigate, addToCart, user, axios } = useContext(AppContext);
   const [quantity, setQuantity] = useState(1);
+  const [reviews, setReviews] = useState([]);
+  const [reviewsLoading, setReviewsLoading] = useState(false);
+  const [rating, setRating] = useState(5);
+  const [comment, setComment] = useState("");
+  const [submitLoading, setSubmitLoading] = useState(false);
+  const [reviewStats, setReviewStats] = useState({
+    averageRating: 5,
+    reviewCount: 0,
+  });
 
   const menu = menus?.find((item) => item._id === id);
+
+  useEffect(() => {
+    if (menu) {
+      setReviewStats({
+        averageRating: menu.averageRating ?? 5,
+        reviewCount: menu.reviewCount ?? 0,
+      });
+    }
+  }, [menu]);
+
+  useEffect(() => {
+    if (!menu) return;
+
+    const loadReviews = async () => {
+      setReviewsLoading(true);
+      try {
+        const { data } = await axios.get(`/api/review/menu/${menu._id}`);
+        if (data.success) {
+          setReviews(data.reviews || []);
+          if (typeof data.averageRating === "number") {
+            setReviewStats({
+              averageRating: data.averageRating ?? 5,
+              reviewCount: data.reviewCount ?? 0,
+            });
+          }
+        } else {
+          toast.error(data.message || "Failed to load reviews");
+        }
+      } catch (error) {
+        toast.error(error?.response?.data?.message || "Failed to load reviews");
+      } finally {
+        setReviewsLoading(false);
+      }
+    };
+
+    loadReviews();
+  }, [menu, axios]);
+
+  const handleSubmitReview = async (event) => {
+    event.preventDefault();
+
+    if (!user) {
+      toast.error("Please log in to submit a review");
+      navigate("/login");
+      return;
+    }
+
+    if (submitLoading) return;
+
+    try {
+      setSubmitLoading(true);
+      const { data } = await axios.post("/api/review/add", {
+        menuId: menu._id,
+        rating,
+        comment,
+      });
+
+      if (data.success) {
+        setReviews((prev) => [data.review, ...prev]);
+        setReviewStats({
+          averageRating: data.averageRating ?? reviewStats.averageRating,
+          reviewCount: data.reviewCount ?? reviewStats.reviewCount,
+        });
+        setRating(5);
+        setComment("");
+        toast.success(data.message || "Review submitted");
+      } else {
+        toast.error(data.message || "Unable to submit review");
+      }
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Unable to submit review");
+    } finally {
+      setSubmitLoading(false);
+    }
+  };
+
+  const renderStars = (value) => (
+    <div className="flex items-center gap-1">
+      {[1, 2, 3, 4, 5].map((star) => (
+        <Star
+          key={star}
+          className={
+            value >= star ? "w-4 h-4 text-[#C5A059]" : "w-4 h-4 text-gray-300"
+          }
+          fill={value >= star ? "currentColor" : "none"}
+        />
+      ))}
+    </div>
+  );
 
   if (!menu) {
     return (
@@ -41,7 +140,7 @@ const MenuDetails = () => {
           
           {/* LEFT: Image Section */}
           <div className="lg:col-span-7">
-            <div className="relative group overflow-hidden rounded-sm shadow-2xl">
+            <div className="relative group overflow-hidden rounded-sm ">
               <img
                 src={menu.image}
                 alt={menu.name}
@@ -138,6 +237,113 @@ const MenuDetails = () => {
                 </div>
                 <div className="w-px h-4 bg-gray-300"></div>
                 <span className="text-[10px] font-bold uppercase tracking-tighter">Hand-crafted at Blackpepper</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Reviews Section */}
+      <div className="max-w-7xl mx-auto px-6 mt-16">
+        <div className="border-t border-gray-200 pt-12 grid lg:grid-cols-12 gap-12">
+          <div className="lg:col-span-4 space-y-4">
+            <h2 className="text-2xl font-serif">Guest Reviews</h2>
+            <div className="flex items-center gap-4">
+              <div className="text-4xl font-serif text-[#C5A059]">
+                {reviewStats.averageRating.toFixed(1)}
+              </div>
+              <div>
+                {renderStars(Math.round(reviewStats.averageRating))}
+                <p className="text-xs uppercase tracking-[0.2em] text-gray-500 mt-2">
+                  {reviewStats.reviewCount} Review{reviewStats.reviewCount === 1 ? "" : "s"}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="lg:col-span-8 space-y-8">
+            <form
+              onSubmit={handleSubmitReview}
+              className="border border-gray-200 bg-white p-6 shadow-sm space-y-4"
+            >
+              <div className="flex items-center justify-between">
+                <p className="text-sm uppercase tracking-[0.2em] text-gray-500 font-bold">
+                  Leave a Review
+                </p>
+                <div className="flex items-center gap-1">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      type="button"
+                      onClick={() => setRating(star)}
+                      className="focus:outline-none"
+                      aria-label={`Rate ${star} star${star === 1 ? "" : "s"}`}
+                    >
+                      <Star
+                        className={
+                          rating >= star
+                            ? "w-5 h-5 text-[#C5A059]"
+                            : "w-5 h-5 text-gray-300"
+                        }
+                        fill={rating >= star ? "currentColor" : "none"}
+                      />
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <textarea
+                rows={4}
+                value={comment}
+                onChange={(event) => setComment(event.target.value)}
+                placeholder="Share your experience..."
+                className="w-full border border-gray-200 p-3 text-sm focus:outline-none focus:border-[#C5A059]"
+              />
+              <div className="flex items-center justify-between">
+                {!user && (
+                  <button
+                    type="button"
+                    onClick={() => navigate("/login")}
+                    className="text-sm text-[#C5A059] uppercase tracking-[0.2em] font-bold"
+                  >
+                    Log in to review
+                  </button>
+                )}
+                <button
+                  type="submit"
+                  disabled={!user || submitLoading}
+                  className="ml-auto px-6 py-3 text-sm uppercase tracking-[0.2em] font-bold bg-[#1A1A1A] text-white transition-all duration-300 hover:bg-[#C5A059] disabled:bg-gray-200 disabled:text-gray-500"
+                >
+                  {submitLoading ? "Submitting..." : "Submit Review"}
+                </button>
+              </div>
+            </form>
+
+            <div className="space-y-6">
+              {reviewsLoading ? (
+                <p className="text-sm text-gray-500">Loading reviews...</p>
+              ) : reviews.length === 0 ? (
+                <p className="text-sm text-gray-500">No reviews yet. Be the first to share.</p>
+              ) : (
+                reviews.map((review) => (
+                  <div key={review._id} className="border border-gray-200 bg-white p-5">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="font-bold text-sm uppercase tracking-[0.15em]">
+                          {review.user?.name || "Guest"}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          {new Date(review.createdAt).toLocaleDateString()}
+                        </p>
+                      </div>
+                      {renderStars(review.rating)}
+                    </div>
+                    {review.comment && (
+                      <p className="mt-3 text-sm text-gray-700 leading-relaxed">
+                        {review.comment}
+                      </p>
+                    )}
+                  </div>
+                ))
+              )}
             </div>
           </div>
         </div>

@@ -25,6 +25,14 @@ const menuSchema=new mongoose.Schema({
     isAvailable:{
       type:Boolean,
       default:true
+    },
+    averageRating: {
+      type: Number,
+      default: 5
+    },
+    reviewCount: {
+      type: Number,
+      default: 0
     }
 
 },{timestamps:true});

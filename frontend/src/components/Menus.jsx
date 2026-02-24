@@ -63,79 +63,88 @@ const Menus = () => {
     ${isVisible ? 'translate-y-0 opacity-100 sm:translate-x-0 sm:translate-y-0' : 'translate-y-full opacity-0 sm:translate-x-full sm:translate-y-0'}
   `}>
     <div className="
-      bg-gradient-to-br from-amber-50 to-amber-100 border-t-2 border-[#C5A059] shadow-2xl relative overflow-hidden group
+      /* THEME: Deep Royal Crimson to Onyx Gradient */
+      bg-gradient-to-br from-[#3D0C0C] to-[#1A0505] border-t-2 border-[#D4AF37] shadow-[0_20px_50px_rgba(0,0,0,0.3)] relative overflow-hidden group
       /* Mobile: horizontal strip layout */
       flex items-center gap-3 p-3 rounded-none
       /* Desktop: card layout */
       sm:flex-col sm:items-stretch sm:rounded-lg sm:border-2 sm:p-8 sm:w-80 sm:mr-4 sm:mb-0
     ">
 
-      {/* Decorative Gift Icon — hidden on mobile */}
-      <div className="hidden sm:block absolute top-2 right-2 text-[#C5A059] opacity-30">
+      {/* Decorative Texture Pattern overlay */}
+      <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] pointer-events-none"></div>
+
+      {/* Decorative Gift Icon — Metallic Gold */}
+      <div className="hidden sm:block absolute top-2 right-2 text-[#D4AF37] opacity-40">
         <Gift size={40} />
       </div>
 
       {/* Close Button */}
       <button
         onClick={() => setShowVoucher(false)}
-        className="absolute top-2 left-2 text-gray-400 hover:text-gray-600 transition-colors"
+        className="absolute top-2 left-2 text-[#D4AF37]/60 hover:text-[#D4AF37] transition-colors z-20"
       >
         <X size={16} />
       </button>
 
       {/* Mobile: small gift icon inline */}
-      <div className="sm:hidden flex-shrink-0 text-[#C5A059] ml-6">
+      <div className="sm:hidden flex-shrink-0 text-[#D4AF37] ml-6">
         <Gift size={24} />
       </div>
 
       {/* Content */}
       <div className="relative z-10 flex-1 sm:pt-2">
-        <p className="text-[10px] text-[#C5A059] font-black uppercase tracking-wider mb-0.5 sm:mb-1">
-          🎉 Today's Offer
+        <p className="text-[10px] text-[#D4AF37] font-black uppercase tracking-[0.3em] mb-0.5 sm:mb-2">
+          🎉 Today's Offers
         </p>
-        <h3 className="text-xs sm:text-sm font-bold text-stone-900 leading-tight line-clamp-1 sm:line-clamp-2 sm:mb-2">
+        <h3 className="text-xs sm:text-base font-serif italic font-bold text-[#F9F4E8] leading-tight line-clamp-1 sm:line-clamp-2 sm:mb-3">
           {currentOffer?.title}
         </h3>
 
-        {/* Offer details — condensed on mobile */}
-        <div className="flex items-center gap-2 sm:block sm:bg-white/60 sm:rounded sm:px-3 sm:py-2 sm:mb-3">
+        {/* Offer details — Champagne/Gold styling */}
+        <div className="flex items-center gap-2 sm:block sm:bg-black/20 sm:backdrop-blur-sm sm:rounded sm:px-3 sm:py-3 sm:mb-4 sm:border sm:border-[#D4AF37]/20">
           {currentOffer?.offerType === "percentage" && (
-            <p className="text-sm sm:text-lg font-black text-amber-700">
+            <p className="text-sm sm:text-2xl font-black text-[#F7E27E] tracking-tighter">
               {currentOffer.discountValue}% OFF
             </p>
           )}
           {currentOffer?.offerType === "fixed" && (
-            <p className="text-sm sm:text-lg font-black text-amber-700">
+            <p className="text-sm sm:text-2xl font-black text-[#F7E27E] tracking-tighter">
               £{currentOffer.discountValue} OFF
             </p>
           )}
           {!["percentage", "fixed"].includes(currentOffer?.offerType) && (
-            <p className="text-xs font-bold text-amber-700 capitalize">
+            <p className="text-xs font-bold text-[#F7E27E] uppercase tracking-widest">
               {currentOffer?.offerType.replace(/([A-Z])/g, ' $1')}
             </p>
           )}
-          <p className="hidden sm:block text-[9px] text-stone-600 mt-1">
+          <p className="hidden sm:block text-[10px] text-[#f7e7ce] mt-2 italic leading-relaxed">
             {currentOffer?.description}
           </p>
         </div>
       </div>
 
-      {/* Claim Button */}
+      {/* Claim Button — Metallic Gold */}
       <button
         onClick={() => navigate('/rewards')}
-        className="flex-shrink-0 cursor-pointer bg-gradient-to-r from-amber-700 to-amber-600 hover:from-amber-800 hover:to-amber-700 text-white text-[10px] font-black uppercase tracking-wider
+        className="flex-shrink-0 cursor-pointer bg-gradient-to-tr from-[#B8860B] via-[#F7E27E] to-[#D4AF37] text-[#1A1A1A] text-[10px] sm:text-[12px] font-black uppercase tracking-[0.2em]
           /* Mobile: compact pill */
-          px-4 py-2 rounded-full
+          px-5 py-2 rounded-full
           /* Desktop: full width block */
-          sm:w-full sm:py-2.5 sm:rounded
-          transition-all duration-300 shadow-md"
+          sm:w-full sm:py-3.5 sm:rounded-md
+          transition-all duration-500 shadow-[0_10px_20px_rgba(184,134,11,0.3)] hover:scale-[1.02] hover:brightness-110 active:scale-95 z-10"
       >
         Claim Now
       </button>
+
+      {/* Royal Corner Accents (Desktop only) */}
+      <div className="hidden sm:block absolute top-4 left-4 w-6 h-6 border-t border-l border-[#D4AF37]/30"></div>
+      <div className="hidden sm:block absolute bottom-4 right-4 w-6 h-6 border-b border-r border-[#D4AF37]/30"></div>
+
     </div>
 
-    {/* Pulse Animation */}
-    <div className="absolute inset-0 bg-gradient-to-r from-[#C5A059]/20 to-transparent rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+    {/* Shine Sweep Animation Effect */}
+    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 pointer-events-none"></div>
   </div>
 )}
 

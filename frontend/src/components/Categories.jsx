@@ -99,8 +99,8 @@ const Categories = () => {
                   key={cat._id}
                   onMouseEnter={() => setActiveIndex(index)}
                   onTouchStart={() => setActiveIndex(index)}
-                  onClick={() => navigate(`/menu/${cat.name}`)}
-                  className="group relative flex items-baseline gap-4 md:gap-6 py-2.5 md:py-3 text-left w-full border-b border-stone-100 last:border-0"
+                  onClick={() => navigate(`/menu?category=${cat._id}`)}
+                  className="group relative flex cursor-pointer items-baseline gap-4 md:gap-6 py-2.5 md:py-3 text-left w-full border-b border-stone-100 last:border-0"
                 >
                   {/* Numbering */}
                   <span

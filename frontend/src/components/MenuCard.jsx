@@ -7,8 +7,12 @@ import {
 } from "../utils/offerCalculations";
 
 const MenuCard = ({ menu }) => {
-  const { addToCart } = useContext(AppContext);
+  const { addToCart, navigate } = useContext(AppContext);
   const [isOffersExpanded, setIsOffersExpanded] = useState(false);
+
+  const handleCardClick = () => {
+    navigate(`/menu-details/${menu._id}`);
+  };
 
   // Get all offers with calculated values
   const offersWithValues = getOffersWithValues(menu.price, menu.offers);
@@ -19,7 +23,7 @@ const MenuCard = ({ menu }) => {
   <div className="group relative w-full bg-white flex flex-col border border-stone-200 transition-all duration-700 hover:border-stone-900">
     
     {/* TOP - The "Portrait Gallery" Section */}
-    <div className="relative h-[420px] overflow-hidden">
+    <div className="relative h-[420px] overflow-hidden cursor-pointer" onClick={handleCardClick}>
       <img
         src={menu.image}
         alt={menu.name}
@@ -61,7 +65,7 @@ const MenuCard = ({ menu }) => {
 
       {/* TOP RIGHT - Floating Glass Heart (Favorite) */}
       <div className="absolute top-6 right-6 z-20">
-        <button className="group/heart flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/80 px-3 py-3 rounded-full hover:bg-white transition-all duration-500">
+        <button className="group/heart flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/80 px-3 py-3 rounded-full hover:bg-white transition-all duration-500 cursor-pointer">
           <svg 
             xmlns="http://www.w3.org/2000/svg" 
             width="16" height="16" 
@@ -100,7 +104,7 @@ const MenuCard = ({ menu }) => {
       </div>
 
       {/* Title - Bold, Serif, High Contrast */}
-      <h3 className="text-3xl font-bold font-serif text-stone-900 tracking-tight leading-[1.1] mb-6">
+      <h3 className="text-3xl font-bold font-serif text-stone-900 tracking-tight leading-[1.1] mb-6 cursor-pointer hover:text-amber-700 transition-colors duration-300" onClick={handleCardClick}>
         {menu.name}
       </h3>
 
@@ -142,7 +146,7 @@ const MenuCard = ({ menu }) => {
             {offersWithValues.length > 1 && (
               <button
                 onClick={() => setIsOffersExpanded(!isOffersExpanded)}
-                className="text-[9px] text-amber-700 font-bold uppercase mt-2 hover:text-amber-900 transition-colors"
+                className="text-[9px] text-amber-700 font-bold uppercase mt-2 hover:text-amber-900 transition-colors cursor-pointer"
               >
                 {isOffersExpanded ? "Hide Offers" : `+${offersWithValues.length - 1} More Offers`}
               </button>
@@ -166,7 +170,7 @@ const MenuCard = ({ menu }) => {
           <button
             onClick={() => addToCart(menu._id)}
             disabled={!menu.isAvailable}
-            className="group/btn relative flex-1 min-w-0 max-w-[220px] overflow-hidden px-3 sm:px-6 py-4 sm:py-5 bg-stone-900 text-white text-[9px] sm:text-[10px] tracking-[0.15em] sm:tracking-[0.25em] uppercase font-black transition-all duration-700 hover:bg-[#B89552] disabled:bg-stone-50 disabled:text-stone-300 border border-stone-900 hover:border-[#B89552]"
+            className="group/btn relative flex-1 min-w-0 max-w-[220px] overflow-hidden px-3 sm:px-6 py-4 sm:py-5 bg-stone-900 text-white text-[9px] sm:text-[10px] tracking-[0.15em] sm:tracking-[0.25em] uppercase font-black transition-all duration-700 hover:bg-[#B89552] disabled:bg-stone-50 disabled:text-stone-300 border border-stone-900 hover:border-[#B89552] cursor-pointer disabled:cursor-not-allowed"
           >
             <div className="relative flex items-center justify-center">
               

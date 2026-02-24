@@ -30,45 +30,31 @@ export const getAllMenuItems=async(req,res)=>{
    try {
       const menuItems=await Menu.find().populate("category","name").sort({createdAt:-1});
       
-      // Fetch all active offers
+      // Fetch all active offers - FIXED: Wrap multiple $or conditions in $and
       const offers = await Offer.find({
          isActive: true,
-         $or: [
-            { startDate: { $exists: false } },
-            { startDate: { $lte: new Date() } },
-         ],
-         $or: [
-            { endDate: { $exists: false } },
-            { endDate: { $gte: new Date() } },
-         ],
+         $and: [
+            {
+               $or: [
+                  { startDate: { $exists: false } },
+                  { startDate: { $lte: new Date() } },
+               ]
+            },
+            {
+               $or: [
+                  { endDate: { $exists: false } },
+                  { endDate: { $gte: new Date() } },
+               ]
+            }
+         ]
       });
       
-      // Add applicable offers to each menu item
-      const menuItemsWithOffers = menuItems.map(item => {
-        const applicableOffers = offers.filter(offer => {
-          // Check if offer applies to all items
-          if (offer.appliesTo === "all") return true;
-          
-          // Check if offer applies to specific menu item
-          if (offer.appliesTo === "menu" && offer.menuItem) {
-            return offer.menuItem.toString() === item._id.toString();
-          }
-          
-          // Check if offer applies to category
-          if (offer.appliesTo === "category" && offer.category) {
-            return offer.category.toString() === item.category._id.toString();
-          }
-          
-          return false;
-        });
-        
-        return {
-          ...item.toObject(),
-          offers: applicableOffers
-        };
+      // Return menu items and offers separately - frontend will resolve which offers apply
+      res.status(200).json({ 
+         success: true, 
+         menuItems: menuItems,
+         offers: offers 
       });
-      
-        res.status(200).json({ success: true, menuItems: menuItemsWithOffers });
    } catch (error) {
       console.log(error);
              return res.json({message:"Internal server error",success:false})

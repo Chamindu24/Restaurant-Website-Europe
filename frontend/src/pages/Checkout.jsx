@@ -4,31 +4,30 @@ import toast from "react-hot-toast";
 import { Pencil, Tag } from "lucide-react";
 import {
   getBestOffer,
-  calculateCartItemTotal,
+  getApplicableOffers,
 } from "../utils/offerCalculations";
 
 const Checkout = () => {
-  const { cart, axios, navigate, user, fetchCartData } = useContext(AppContext);
+  const { cart, axios, navigate, user, fetchCartData, offers } = useContext(AppContext);
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("Pay at hotel");
 
-  // Calculate totals with discounts
+  // Calculate totals with discounts using offer engine
   const calculateTotals = () => {
     let subtotal = 0;
     let totalDiscount = 0;
 
     if (cart?.items && cart.items.length > 0) {
       cart.items.forEach((item) => {
-        const bestOffer = getBestOffer(item.menuItem.price, item.menuItem.offers);
-        const { totalSavings } = calculateCartItemTotal(
-          item.quantity,
-          item.menuItem.price,
-          bestOffer
-        );
+        const applicableOffers = getApplicableOffers(item.menuItem, offers);
+        const bestOffer = getBestOffer(item.menuItem.price, item.quantity, applicableOffers);
         
-        subtotal += item.menuItem.price * item.quantity;
-        totalDiscount += totalSavings;
+        const itemSubtotal = item.menuItem.price * item.quantity;
+        const discount = bestOffer ? bestOffer.discountAmount : 0;
+        
+        subtotal += itemSubtotal;
+        totalDiscount += discount;
       });
     }
 
@@ -59,13 +58,11 @@ const Checkout = () => {
       return;
     }
     try {
+      // SECURITY FIX: Don't send totals from frontend - backend will recalculate
       const { data } = await axios.post("/api/order/place", {
         address,
         phone,
         paymentMethod,
-        totalAmount: grandTotal,
-        subtotal,
-        discount: totalDiscount,
       });
       if (data.success) {
         toast.success(data.message);

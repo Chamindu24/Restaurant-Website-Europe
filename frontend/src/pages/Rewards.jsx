@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
 import { Tag, Calendar, Clock, Percent, Gift, Diamond } from "lucide-react";
 import MenuCard from "../components/MenuCard";
+import { getApplicableOffers } from "../utils/offerCalculations";
 
 const Rewards = () => {
   const { menus, offers, offersLoaded } = useContext(AppContext);
@@ -9,13 +10,15 @@ const Rewards = () => {
 
   // Update filtered menus whenever menus or offers change
   useEffect(() => {
-    if (menus.length > 0) {
-      const itemsWithOffers = menus.filter(
-        (item) => item.offers && item.offers.length > 0
-      );
+    if (menus.length > 0 && offers.length > 0) {
+      // Filter menu items that have applicable offers using the offer engine
+      const itemsWithOffers = menus.filter((item) => {
+        const applicableOffers = getApplicableOffers(item, offers);
+        return applicableOffers.length > 0;
+      });
       setMenuItemsWithOffers(itemsWithOffers);
     }
-  }, [menus]);
+  }, [menus, offers]);
 
   const getOfferIcon = (offerType) => {
     switch (offerType) {

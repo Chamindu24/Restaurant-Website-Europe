@@ -5,24 +5,15 @@ import { Link } from "react-router-dom";
 import { X, Gift } from "lucide-react";
 
 const Menus = () => {
-  const { menus, navigate, activeOffersCount } = useContext(AppContext);
+  const { menus, navigate, offers } = useContext(AppContext);
   const previewMenus = menus.slice(0, 6);
   
   const [showVoucher, setShowVoucher] = useState(false);
   const [voucherIndex, setVoucherIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
 
-  // Get all offers from menus
-  const allOffers = [];
-  menus.forEach(menu => {
-    if (menu.offers && menu.offers.length > 0) {
-      menu.offers.forEach(offer => {
-        if (!allOffers.find(o => o._id === offer._id)) {
-          allOffers.push(offer);
-        }
-      });
-    }
-  });
+  // Use all active offers from context instead of extracting from menus
+  const allOffers = offers || [];
 
   useEffect(() => {
     const handleScroll = () => {

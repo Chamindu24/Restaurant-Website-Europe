@@ -1,23 +1,24 @@
 import { useContext, useState } from "react";
 import { AppContext } from "../context/AppContext";
 import {
-  getOffersWithValues,
+  calculateOffersWithDiscounts,
   getBestOffer,
-  getDiscountedPrice,
+  getApplicableOffers,
 } from "../utils/offerCalculations";
 
 const MenuCard = ({ menu }) => {
-  const { addToCart, navigate } = useContext(AppContext);
+  const { addToCart, navigate, offers } = useContext(AppContext);
   const [isOffersExpanded, setIsOffersExpanded] = useState(false);
 
   const handleCardClick = () => {
     navigate(`/menu-details/${menu._id}`);
   };
 
-  // Get all offers with calculated values
-  const offersWithValues = getOffersWithValues(menu.price, menu.offers);
-  const bestOffer = getBestOffer(menu.price, menu.offers);
-  const discountedPrice = bestOffer ? getDiscountedPrice(menu.price, bestOffer) : null;
+  // Get all applicable offers for this menu item
+  const applicableOffers = getApplicableOffers(menu, offers);
+  const offersWithValues = calculateOffersWithDiscounts(menu.price, 1, applicableOffers);
+  const bestOffer = getBestOffer(menu.price, 1, applicableOffers);
+  const discountedPrice = bestOffer ? bestOffer.discountedPrice : null;
 
   return (
   <div className="group relative w-full bg-white flex flex-col border border-stone-200 transition-all duration-700 hover:border-stone-900">

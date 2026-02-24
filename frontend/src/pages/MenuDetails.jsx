@@ -3,10 +3,11 @@ import { useParams } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 import { ArrowLeft, ShoppingCart, Minus, Plus, Tag, Award, Star } from "lucide-react";
 import { toast } from "react-hot-toast";
+import { getApplicableOffers } from "../utils/offerCalculations";
 
 const MenuDetails = () => {
   const { id } = useParams();
-  const { menus, navigate, addToCart, user, axios } = useContext(AppContext);
+  const { menus, navigate, addToCart, user, axios, offers } = useContext(AppContext);
   const [quantity, setQuantity] = useState(1);
   const [reviews, setReviews] = useState([]);
   const [reviewsLoading, setReviewsLoading] = useState(false);
@@ -19,6 +20,9 @@ const MenuDetails = () => {
   });
 
   const menu = menus?.find((item) => item._id === id);
+  
+  // Get applicable offers for this menu item using the offer engine
+  const applicableOffers = menu ? getApplicableOffers(menu, offers) : [];
 
   useEffect(() => {
     if (menu) {
@@ -174,11 +178,11 @@ const MenuDetails = () => {
             </div>
 
             {/* Offers from Data */}
-            {menu.offers?.length > 0 && (
+            {applicableOffers?.length > 0 && (
               <div className="space-y-4">
                 <h3 className="uppercase tracking-[0.2em] text-xs font-black text-gray-400">Exclusive Offers</h3>
                 <div className="grid gap-3">
-                  {menu.offers.map((offer) => (
+                  {applicableOffers.map((offer) => (
                     <div key={offer._id} className="flex items-center gap-4 p-4 border border-[#C5A059]/30 bg-[#C5A059]/5 rounded-sm">
                       <Tag className="w-5 h-5 text-[#C5A059]" />
                       <div>

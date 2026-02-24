@@ -3,8 +3,8 @@
  * OFFER ENGINE - SINGLE SOURCE OF TRUTH
  * ==========================================
  * 
- * This is a mirror of the backend offerEngine.js
- * Used by frontend for display and validation.
+ * This module handles ALL offer/discount logic.
+ * Used by both backend (order calculation) and frontend (display).
  * 
  * Supported Offer Types:
  * - percentage: X% off
@@ -17,6 +17,10 @@
 
 /**
  * Check if an offer is valid at the current moment
+ * @param {Object} offer - The offer object
+ * @param {Date} currentDate - Current date/time (defaults to now)
+ * @param {Object} userInfo - Optional user info for birthday/anniversary offers
+ * @returns {boolean}
  */
 export const isOfferValid = (offer, currentDate = new Date(), userInfo = null) => {
   if (!offer || !offer.isActive) return false;
@@ -61,6 +65,9 @@ export const isOfferValid = (offer, currentDate = new Date(), userInfo = null) =
 
 /**
  * Check if an offer applies to a specific menu item
+ * @param {Object} offer - The offer object
+ * @param {Object} menuItem - The menu item object
+ * @returns {boolean}
  */
 export const doesOfferApplyToItem = (offer, menuItem) => {
   if (!offer || !menuItem) return false;
@@ -83,30 +90,43 @@ export const doesOfferApplyToItem = (offer, menuItem) => {
 };
 
 /**
- * Calculate discount amount for a single item
+ * Calculate discount amount for a single item (quantity = 1)
+ * @param {Number} price - Item price
+ * @param {Object} offer - The offer object
+ * @param {Number} quantity - Quantity of items (for bxgy)
+ * @returns {Number} - Total discount amount
  */
 export const calculateDiscountForItem = (price, offer, quantity = 1) => {
   if (!offer || price <= 0 || quantity <= 0) return 0;
 
   switch (offer.offerType) {
     case 'percentage':
-    case 'happyHour':
+    case 'happyHour': // happyHour is just a percentage with time restrictions
       return (price * offer.discountValue) / 100 * quantity;
 
     case 'fixed':
+      // Fixed discount per item, but never exceed item price
       return Math.min(offer.discountValue, price) * quantity;
 
     case 'bxgy': {
+      // Buy X Get Y free
       const buyQty = offer.buyQuantity || 1;
       const getQty = offer.getQuantity || 1;
       const totalPerSet = buyQty + getQty;
+      
+      // How many complete sets?
       const completeSets = Math.floor(quantity / totalPerSet);
+      
+      // Free items = completeSets * getQty
       const freeItems = completeSets * getQty;
+      
+      // Discount is the price of free items
       return freeItems * price;
     }
 
     case 'birthday':
     case 'anniversary':
+      // These typically work like percentage offers
       return offer.discountValue ? (price * offer.discountValue) / 100 * quantity : 0;
 
     default:
@@ -116,6 +136,11 @@ export const calculateDiscountForItem = (price, offer, quantity = 1) => {
 
 /**
  * Get all valid offers that apply to a menu item
+ * @param {Object} menuItem - The menu item
+ * @param {Array} allOffers - Array of all offers
+ * @param {Date} currentDate - Current date/time
+ * @param {Object} userInfo - Optional user info
+ * @returns {Array} - Array of valid applicable offers
  */
 export const getApplicableOffers = (menuItem, allOffers, currentDate = new Date(), userInfo = null) => {
   if (!menuItem || !allOffers || allOffers.length === 0) return [];
@@ -128,6 +153,10 @@ export const getApplicableOffers = (menuItem, allOffers, currentDate = new Date(
 
 /**
  * Calculate discount for each applicable offer and return sorted by best discount
+ * @param {Number} price - Item price
+ * @param {Number} quantity - Item quantity
+ * @param {Array} applicableOffers - Array of applicable offers
+ * @returns {Array} - Offers with calculated discount amounts, sorted by best discount
  */
 export const calculateOffersWithDiscounts = (price, quantity, applicableOffers) => {
   if (!applicableOffers || applicableOffers.length === 0) return [];
@@ -140,17 +169,21 @@ export const calculateOffersWithDiscounts = (price, quantity, applicableOffers) 
 
       return {
         ...offer,
-        discountAmount,
-        discountedPrice,
-        totalAfterDiscount,
+        discountAmount, // Total discount for all items
+        discountedPrice, // Price per item after discount
+        totalAfterDiscount, // Total price after discount
         savingPercentage: price > 0 ? ((discountAmount / (price * quantity)) * 100).toFixed(1) : 0,
       };
     })
-    .sort((a, b) => b.discountAmount - a.discountAmount);
+    .sort((a, b) => b.discountAmount - a.discountAmount); // Best discount first
 };
 
 /**
  * Get the best offer for an item
+ * @param {Number} price - Item price
+ * @param {Number} quantity - Item quantity
+ * @param {Array} applicableOffers - Array of applicable offers
+ * @returns {Object|null} - Best offer with calculations or null
  */
 export const getBestOffer = (price, quantity, applicableOffers) => {
   const offersWithDiscounts = calculateOffersWithDiscounts(price, quantity, applicableOffers);
@@ -159,6 +192,10 @@ export const getBestOffer = (price, quantity, applicableOffers) => {
 
 /**
  * Calculate total for a cart item with best offer applied
+ * @param {Object} cartItem - Cart item with { menuItem, quantity }
+ * @param {Array} allOffers - All available offers
+ * @param {Object} userInfo - Optional user info
+ * @returns {Object} - { subtotal, discount, total, appliedOffer }
  */
 export const calculateCartItemTotal = (cartItem, allOffers, userInfo = null) => {
   if (!cartItem || !cartItem.menuItem) {
@@ -186,16 +223,15 @@ export const calculateCartItemTotal = (cartItem, allOffers, userInfo = null) => 
     discount,
     total,
     appliedOffer: bestOffer,
-    // Legacy compatibility
-    itemTotal: total,
-    totalSavings: discount,
-    discountAmount: bestOffer ? bestOffer.discountAmount / quantity : 0,
-    discountedPrice: bestOffer ? bestOffer.discountedPrice : price,
   };
 };
 
 /**
  * Calculate totals for entire cart
+ * @param {Array} cartItems - Array of cart items
+ * @param {Array} allOffers - All available offers
+ * @param {Object} userInfo - Optional user info
+ * @returns {Object} - { subtotal, totalDiscount, grandTotal, itemBreakdown }
  */
 export const calculateCartTotals = (cartItems, allOffers, userInfo = null) => {
   if (!cartItems || cartItems.length === 0) {

@@ -76,8 +76,7 @@ const AppContextProvider = ({ children }) => {
             return {
               ...cartItem,
               menuItem: {
-                ...cartItem.menuItem,
-                offers: freshMenuItem.offers || [],
+                ...freshMenuItem,
               },
             };
           }
@@ -105,9 +104,9 @@ const AppContextProvider = ({ children }) => {
     }
   }, [cart]);
 
-  // 🔹 Enrich cart items with fresh offers whenever menus are updated (preserve guest cart structure)
+  // 🔹 Enrich cart items with fresh offers whenever menus or offers are updated
   useEffect(() => {
-    if (cart?.items && cart.items.length > 0 && menus.length > 0) {
+    if (cart?.items && cart.items.length > 0 && menus.length > 0 && offers.length > 0) {
       const enrichedItems = cart.items.map((cartItem) => {
         const freshMenuItem = menus.find(
           (m) => m._id === cartItem.menuItem._id
@@ -116,8 +115,7 @@ const AppContextProvider = ({ children }) => {
           return {
             ...cartItem,
             menuItem: {
-              ...cartItem.menuItem,
-              offers: freshMenuItem.offers || [],
+              ...freshMenuItem,
             },
           };
         }
@@ -129,7 +127,7 @@ const AppContextProvider = ({ children }) => {
         items: enrichedItems,
       }));
     }
-  }, [menus]);
+  }, [menus, offers]);
   const cartCount = cart?.items?.reduce(
     (acc, item) => acc + item.quantity,
     0 || 0
@@ -160,10 +158,7 @@ const AppContextProvider = ({ children }) => {
           setCart({
             ...cart,
             items: [...(cart.items || []), {
-              menuItem: {
-                ...menuItem,
-                offers: menuItem.offers || [],
-              },
+              menuItem: menuItem,
               quantity: 1,
               _id: `${menuId}-${Date.now()}`
             }]
@@ -273,7 +268,17 @@ const AppContextProvider = ({ children }) => {
       const { data } = await axios.get("/api/menu/all");
 
       if (data.success) {
+        // Backend now returns menus and offers separately
         setMenus(data.menuItems);
+        
+        // If offers are included in the response, update them too
+        if (data.offers) {
+          setOffers(data.offers);
+          const activeCount = data.offers.filter((offer) => offer.isActive).length;
+          setActiveOffersCount(activeCount);
+          setOffersLoaded(true);
+        }
+        
         setMenusLoaded(true);
       } else {
         console.log("Failed to fetch menus");

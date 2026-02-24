@@ -3,13 +3,13 @@ import { AppContext } from "../context/AppContext";
 import { Minus, Plus, UtensilsCrossed, X, Tag, ChevronDown } from "lucide-react";
 import toast from "react-hot-toast";
 import {
-  getOffersWithValues,
+  calculateOffersWithDiscounts,
   getBestOffer,
-  calculateCartItemTotal,
+  getApplicableOffers,
 } from "../utils/offerCalculations";
 
 const Cart = () => {
-  const { cart, navigate, removeFromCart, updateQuantity, user } =
+  const { cart, navigate, removeFromCart, updateQuantity, user, offers } =
     useContext(AppContext);
   
   const [expandedOffers, setExpandedOffers] = useState({});
@@ -22,21 +22,20 @@ const Cart = () => {
     }));
   };
 
-  // Calculate totals
+  // Calculate totals using the offer engine
   const calculateTotals = () => {
     let subtotal = 0;
     let totalDiscount = 0;
 
     cart.items.forEach((item) => {
-      const bestOffer = getBestOffer(item.menuItem.price, item.menuItem.offers);
-      const { totalSavings } = calculateCartItemTotal(
-        item.quantity,
-        item.menuItem.price,
-        bestOffer
-      );
+      const applicableOffers = getApplicableOffers(item.menuItem, offers);
+      const bestOffer = getBestOffer(item.menuItem.price, item.quantity, applicableOffers);
       
-      subtotal += item.menuItem.price * item.quantity;
-      totalDiscount += totalSavings;
+      const itemSubtotal = item.menuItem.price * item.quantity;
+      const discount = bestOffer ? bestOffer.discountAmount : 0;
+      
+      subtotal += itemSubtotal;
+      totalDiscount += discount;
     });
 
     return {
@@ -117,13 +116,21 @@ const Cart = () => {
         {/* Items Gallery (Left Side) */}
         <div className="lg:col-span-8 space-y-12">
           {cart.items.map((item) => {
-            const offersWithValues = getOffersWithValues(item.menuItem.price, item.menuItem.offers);
-            const bestOffer = offersWithValues.length > 0 ? offersWithValues[0] : null;
-            const { itemTotal, totalSavings, discountedPrice } = calculateCartItemTotal(
-              item.quantity,
-              item.menuItem.price,
-              bestOffer
+            // Get applicable offers for this item
+            const applicableOffers = getApplicableOffers(item.menuItem, offers);
+            const offersWithValues = calculateOffersWithDiscounts(
+              item.menuItem.price, 
+              item.quantity, 
+              applicableOffers
             );
+            const bestOffer = offersWithValues.length > 0 ? offersWithValues[0] : null;
+            
+            // Calculate item totals
+            const itemSubtotal = item.menuItem.price * item.quantity;
+            const discount = bestOffer ? bestOffer.discountAmount : 0;
+            const itemTotal = itemSubtotal - discount;
+            const discountedPrice = bestOffer ? bestOffer.discountedPrice : item.menuItem.price;
+            
             const isExpanded = expandedOffers[item._id];
             
             return (
@@ -271,7 +278,7 @@ const Cart = () => {
                       </span>
                       {bestOffer && (
                         <span className="text-xs text-red-500 font-semibold">
-                          You save £{totalSavings.toFixed(2)}
+                          You save £{discount.toFixed(2)}
                         </span>
                       )}
                     </div>

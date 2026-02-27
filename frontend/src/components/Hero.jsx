@@ -73,7 +73,7 @@ const Hero = () => {
         </div>
 
         {/* Tagline */}
-        <p className="mt-6 md:mt-8 max-w-xs sm:max-w-md md:max-w-lg text-stone-200/80 font-serif italic text-base sm:text-lg md:text-xl leading-relaxed">
+        <p className="mt-6 md:mt-8 max-w-xs sm:max-w-md md:max-w-lg text-stone-200/80 font-serif font-semibold tracking-wider italic text-base sm:text-lg md:text-xl leading-relaxed">
           "A symphony of rare spices and local craft, served in the heart of London."
         </p>
 

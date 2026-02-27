@@ -31,6 +31,7 @@ const MenuDetails = () => {
         reviewCount: menu.reviewCount ?? 0,
       });
     }
+    console.log('menu',menu)
   }, [menu]);
 
   useEffect(() => {
@@ -108,6 +109,11 @@ const MenuDetails = () => {
             value >= star ? "w-4 h-4 text-[#C5A059]" : "w-4 h-4 text-gray-300"
           }
           fill={value >= star ? "currentColor" : "none"}
+          style={
+            value >= star
+              ? { filter: "drop-shadow(0 0 6px rgba(197, 160, 89, 0.8))" }
+              : {}
+          }
         />
       ))}
     </div>
@@ -127,19 +133,19 @@ const MenuDetails = () => {
   const totalPrice = (menu.price * quantity).toFixed(2);
 
   return (
-    <div className="min-h-screen bg-[#FAF9F6] text-[#1A1A1A] pb-20">
+    <div className="min-h-screen bg-[#FBF5EB] text-[#1A1A1A]  ">
       {/* Navigation */}
-      <div className="max-w-7xl mx-auto px-6 py-8">
+      <div className="max-w-8xl mx-auto px-10 py-10">
         <button
           onClick={() => navigate("/menu")}
-          className="flex items-center gap-2 text-[#1A1A1A] hover:text-[#C5A059] transition-all group"
+          className="flex cursor-pointer items-center gap-2 text-[#1A1A1A]  transition-all  group"
         >
-          <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-          <span className="uppercase tracking-[0.2em] text-sm font-bold">Back to Selection</span>
+          <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 duration-300 transition-transform" />
+          <span className="uppercase tracking-[0.1em] text-sm font-bold">Back to Menu</span>
         </button>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-8xl mx-auto px-10">
         <div className="grid lg:grid-cols-12 gap-16 items-start">
           
           {/* LEFT: Image Section */}
@@ -148,11 +154,11 @@ const MenuDetails = () => {
               <img
                 src={menu.image}
                 alt={menu.name}
-                className="w-full h-[600px] object-cover transition-transform duration-700 group-hover:scale-105"
+                className="w-full h-[600px] object-cover "
               />
-              <div className="absolute top-0 left-0 w-full h-full border-[12px] border-white/10 pointer-events-none"></div>
+              <div className="absolute top-0 left-0 w-full h-full border-[16px] border-white/10 pointer-events-none"></div>
               {menu.isAvailable && (
-                <div className="absolute top-6 left-6 bg-[#C5A059] text-white px-6 py-1 tracking-[0.1em] text-xs font-bold uppercase">
+                <div className="absolute top-6 left-6 bg-stone-900 rounded-md text-white px-6 py-1 tracking-[0.1em] text-xs font-bold uppercase">
                   Available Today
                 </div>
               )}
@@ -161,29 +167,32 @@ const MenuDetails = () => {
 
           {/* RIGHT: Details Section */}
           <div className="lg:col-span-5 space-y-8">
-            <header className="border-b border-gray-200 pb-8">
-              <span className="text-[#C5A059] font-bold tracking-[0.3em] uppercase text-xs mb-3 block">
-                {menu.category?.name || "Fine Dining"}
-              </span>
-              <h1 className="text-5xl font-serif leading-tight mb-4">{menu.name}</h1>
-              <p className="text-2xl font-light text-[#1A1A1A] tracking-tight">${menu.price.toFixed(2)}</p>
+            <header className="border-b border-gray-400 pb-8">
+              <div className="flex items-center gap-3 mb-6">
+                <span className="h-1 w-10 bg-[#855d14]/60"></span>
+                <span className="text-[#855d14] font-black tracking-[0.3em] uppercase text-[14px]">
+                  {menu.category?.name || "Fine Dining"}
+                </span>
+              </div>
+              <h1 className="text-5xl font-serif font-semibold leading-tight mb-4">{menu.name}</h1>
+              <p className="text-3xl  text-[#1A1A1A] tracking-tight">£{menu.price.toFixed(2)}</p>
             </header>
 
             {/* Description */}
             <div className="space-y-4">
-              <h3 className="uppercase tracking-[0.2em] text-xs font-black text-gray-400">Description</h3>
-              <p className="text-lg leading-relaxed font-medium text-gray-800">
+              <h3 className="uppercase tracking-[0.2em] text-xs font-black text-gray-600">Description</h3>
+              <p className="text-xl leading-relaxed font-medium text-gray-800">
                 {menu.description}
               </p>
             </div>
 
-            {/* Offers from Data */}
+            {/* Applicable Offers from Offer Engine */}
             {applicableOffers?.length > 0 && (
               <div className="space-y-4">
-                <h3 className="uppercase tracking-[0.2em] text-xs font-black text-gray-400">Exclusive Offers</h3>
+                <h3 className="uppercase tracking-[0.2em] text-xs font-black text-gray-600">Exclusive Offers</h3>
                 <div className="grid gap-3">
                   {applicableOffers.map((offer) => (
-                    <div key={offer._id} className="flex items-center gap-4 p-4 border border-[#C5A059]/30 bg-[#C5A059]/5 rounded-sm">
+                    <div key={offer._id} className="flex items-center gap-4 p-4 border border-[#C5A059] bg-[#F9F9F9] rounded-sm">
                       <Tag className="w-5 h-5 text-[#C5A059]" />
                       <div>
                         <p className="font-bold text-sm uppercase tracking-wider">{offer.title}</p>
@@ -196,7 +205,7 @@ const MenuDetails = () => {
             )}
 
             {/* Quantity Selector & Checkout */}
-            <div className="bg-white border border-gray-100 p-8 shadow-sm space-y-6">
+            <div className="bg-[#F9F9F9] border border-gray-400 p-8  space-y-6">
               <div className="flex items-center justify-between">
                 <span className="font-bold uppercase tracking-widest text-sm text-gray-500">Quantity</span>
                 <div className="flex items-center border border-gray-300">
@@ -214,135 +223,152 @@ const MenuDetails = () => {
 
               <div className="pt-6 border-t border-gray-100">
                 <div className="flex justify-between items-end mb-6">
-                  <span className="text-gray-500 font-bold uppercase tracking-widest text-xs">Total Est.</span>
-                  <span className="text-4xl font-serif text-[#C5A059]">${totalPrice}</span>
+                  <span className="text-gray-500 font-bold uppercase tracking-widest text-md">Total Price.</span>
+                  <span className="text-5xl font-serif font-semibold text-[#7c5712]">£{totalPrice}</span>
                 </div>
 
                 <button
                   disabled={!menu.isAvailable}
                   onClick={() => addToCart(menu._id, quantity)}
-                  className={`w-full py-5 rounded-none font-bold tracking-[0.2em] uppercase text-sm transition-all duration-500 flex items-center justify-center gap-3 ${
+                  className={`w-full cursor-pointer py-5 rounded-none font-bold tracking-[0.2em] uppercase text-sm transition-all duration-500 flex items-center justify-center gap-3 ${
                     menu.isAvailable
                       ? "bg-[#1A1A1A] text-white hover:bg-[#C5A059] shadow-xl"
                       : "bg-gray-200 text-gray-400 cursor-not-allowed"
                   }`}
                 >
                   <ShoppingCart className="w-5 h-5" />
-                  {menu.isAvailable ? "Reserve for Order" : "Currently Unavailable"}
+                  {menu.isAvailable ? "Add to Order" : "Currently Unavailable"}
                 </button>
               </div>
             </div>
 
-            {/* Quality Assurance */}
-            <div className="flex items-center gap-6 pt-4 grayscale opacity-70">
-                <div className="flex items-center gap-2">
-                    <Award className="w-5 h-5" />
-                    <span className="text-[10px] font-bold uppercase tracking-tighter">Premium Grade Ingredients</span>
-                </div>
-                <div className="w-px h-4 bg-gray-300"></div>
-                <span className="text-[10px] font-bold uppercase tracking-tighter">Hand-crafted at Blackpepper</span>
-            </div>
+
           </div>
         </div>
       </div>
 
       {/* Reviews Section */}
-      <div className="max-w-7xl mx-auto px-6 mt-16">
-        <div className="border-t border-gray-200 pt-12 grid lg:grid-cols-12 gap-12">
-          <div className="lg:col-span-4 space-y-4">
-            <h2 className="text-2xl font-serif">Guest Reviews</h2>
-            <div className="flex items-center gap-4">
-              <div className="text-4xl font-serif text-[#C5A059]">
+      <div className="max-w-7xl mx-auto  mt-24 pb-20">
+        <div className="border-t border-gray-900/50 pt-16 grid lg:grid-cols-12 gap-16">
+          
+          {/* Left Column: Summary Stats */}
+          <div className="lg:col-span-4 space-y-8">
+            <div>
+              <h2 className="text-4xl font-serif font-semibold text-[#1A1A1A] mb-2">Customer Reviews</h2>
+              <p className="text-md text-gray-600 font-medium">Honest feedback from our happy clients.</p>
+            </div>
+
+            <div className="flex items-end gap-4">
+              <div className="text-6xl font-serif text-[#1A1A1A]">
                 {reviewStats.averageRating.toFixed(1)}
               </div>
-              <div>
-                {renderStars(Math.round(reviewStats.averageRating))}
-                <p className="text-xs uppercase tracking-[0.2em] text-gray-500 mt-2">
-                  {reviewStats.reviewCount} Review{reviewStats.reviewCount === 1 ? "" : "s"}
+              <div className="pb-2">
+                <div className="flex mb-1">{renderStars(Math.round(reviewStats.averageRating))}</div>
+                <p className="text-[11px] uppercase tracking-[0.25em] text-gray-900 font-bold">
+                  Based on {reviewStats.reviewCount} Experiences
                 </p>
               </div>
             </div>
+
+            {/* Visual Rating Breakdown - The "Famous Site" Look */}
+            <div className="space-y-3 pt-6">
+              {[5, 4, 3, 2, 1].map((num) => (
+                <div key={num} className="flex items-center gap-4 text-sm font-medium text-gray-700">
+                  <span className="w-3">{num}</span>
+                  <div className="flex-1 h-[2px] bg-gray-100">
+                    <div 
+                      className="h-full bg-[#C5A059]" 
+                      style={{ width: `${num === 5 ? 85 : num === 4 ? 10 : 5}%` }} // Replace with dynamic logic if available
+                    ></div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
-          <div className="lg:col-span-8 space-y-8">
+          {/* Right Column: Form & List */}
+          <div className="lg:col-span-8 space-y-12">
+            
+            {/* Premium Review Form */}
             <form
               onSubmit={handleSubmitReview}
-              className="border border-gray-200 bg-white p-6 shadow-sm space-y-4"
+              className="bg-[#F9F9F9] border border-gray-400 p-8 rounded-sm space-y-6"
             >
-              <div className="flex items-center justify-between">
-                <p className="text-sm uppercase tracking-[0.2em] text-gray-500 font-bold">
-                  Leave a Review
-                </p>
-                <div className="flex items-center gap-1">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <h3 className="text-sm uppercase tracking-[0.2em] text-[#1A1A1A] font-bold">
+                  Write a Review
+                </h3>
+                <div className="flex items-center gap-2">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <button
                       key={star}
                       type="button"
                       onClick={() => setRating(star)}
-                      className="focus:outline-none"
-                      aria-label={`Rate ${star} star${star === 1 ? "" : "s"}`}
+                      className="transition-transform cursor-pointer hover:scale-110 focus:outline-none"
                     >
                       <Star
-                        className={
-                          rating >= star
-                            ? "w-5 h-5 text-[#C5A059]"
-                            : "w-5 h-5 text-gray-300"
-                        }
+                        className={`w-5 h-5 ${rating >= star ? "text-[#C5A059]" : "text-gray-300"}`}
                         fill={rating >= star ? "currentColor" : "none"}
+                        style={
+                          rating >= star
+                            ? { filter: "drop-shadow(0 0 8px rgba(197, 160, 89, 0.9))" }
+                            : {}
+                        }
                       />
                     </button>
                   ))}
                 </div>
               </div>
+
               <textarea
-                rows={4}
+                rows={3}
                 value={comment}
                 onChange={(event) => setComment(event.target.value)}
-                placeholder="Share your experience..."
-                className="w-full border border-gray-200 p-3 text-sm focus:outline-none focus:border-[#C5A059]"
+                placeholder="Describe your dining experience..."
+                className="w-full bg-transparent border-b-2 border-gray-400 py-3 text-base text-gray-800 placeholder:text-gray-500 focus:outline-none focus:border-[#C5A059] transition-colors resize-none font-medium"
               />
-              <div className="flex items-center justify-between">
-                {!user && (
-                  <button
-                    type="button"
-                    onClick={() => navigate("/login")}
-                    className="text-sm text-[#C5A059] uppercase tracking-[0.2em] font-bold"
-                  >
-                    Log in to review
-                  </button>
-                )}
+
+              <div className="flex items-center justify-between pt-2">
+
+
+
                 <button
                   type="submit"
                   disabled={!user || submitLoading}
-                  className="ml-auto px-6 py-3 text-sm uppercase tracking-[0.2em] font-bold bg-[#1A1A1A] text-white transition-all duration-300 hover:bg-[#C5A059] disabled:bg-gray-200 disabled:text-gray-500"
+                  className="px-10 py-4 text-xs uppercase tracking-[0.2em] font-bold bg-[#1A1A1A] text-white hover:bg-[#C5A059] transition-all duration-500 disabled:bg-gray-300"
                 >
-                  {submitLoading ? "Submitting..." : "Submit Review"}
+                  {submitLoading ? "Processing..." : "Post Review"}
                 </button>
               </div>
             </form>
 
-            <div className="space-y-6">
+            {/* Review Feed */}
+            <div className="space-y-10">
               {reviewsLoading ? (
-                <p className="text-sm text-gray-500">Loading reviews...</p>
+                <div className="flex justify-center py-10">
+                  <div className="animate-pulse text-sm uppercase tracking-widest font-bold">Loading...</div>
+                </div>
               ) : reviews.length === 0 ? (
-                <p className="text-sm text-gray-500">No reviews yet. Be the first to share.</p>
+                <p className="text-center py-10 text-gray-500 font-medium">No reviews yet. Be the first to grace our wall.</p>
               ) : (
                 reviews.map((review) => (
-                  <div key={review._id} className="border border-gray-200 bg-white p-5">
-                    <div className="flex items-center justify-between">
+                  <div key={review._id} className="group border-b border-gray-500 pb-10 last:border-0">
+                    <div className="flex justify-between items-start mb-4">
                       <div>
-                        <p className="font-bold text-sm uppercase tracking-[0.15em]">
-                          {review.user?.name || "Guest"}
-                        </p>
-                        <p className="text-xs text-gray-500">
-                          {new Date(review.createdAt).toLocaleDateString()}
+                        <h4 className="font-bold text-md uppercase tracking-[0.15em] text-[#1A1A1A]">
+                          {review.user?.name || "Distinguished Guest"}
+                        </h4>
+                        <p className="text-[12px] font-bold text-gray-500 mt-1 uppercase">
+                          {new Date(review.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
                         </p>
                       </div>
-                      {renderStars(review.rating)}
+                      <div className="flex gap-0.5">
+                        {renderStars(review.rating)}
+                      </div>
                     </div>
                     {review.comment && (
-                      <p className="mt-3 text-sm text-gray-700 leading-relaxed">
-                        {review.comment}
+                      <p className="text-2xl text-gray-800 font-serif leading-relaxed font-semibold max-w-2xl">
+                        "{review.comment}"
                       </p>
                     )}
                   </div>

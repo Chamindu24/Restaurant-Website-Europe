@@ -146,7 +146,7 @@ const Navbar = () => {
               >
                 <ShoppingCart size={20} strokeWidth={1.5} />
                 {cartCount > 0 && (
-                  <span className="absolute top-0 right-0 bg-[#C5A059] text-white text-[9px] rounded-full w-4 h-4 flex items-center justify-center font-bold shadow-sm group-hover:scale-110 transition-transform">
+                  <span className="absolute top-0 right-0 bg-red-600 text-white text-[12px] rounded-full w-4 h-4 flex items-center justify-center font-bold shadow-sm group-hover:scale-110 transition-transform">
                     {cartCount}
                   </span>
                 )}

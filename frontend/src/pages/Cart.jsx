@@ -100,7 +100,8 @@ const Cart = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto mt-16 px-4 mb-24">
+    
+    <div className=" mt-16 px-4 mb-24">
       {/* Royal Header Section */}
       <div className="text-center mb-16">
         <span className="text-[10px] tracking-[0.5em] text-[#A68966] uppercase mb-4 block font-bold">
@@ -112,7 +113,7 @@ const Cart = () => {
         <div className="w-24 h-0.5 bg-[#A68966] mx-auto mt-6 opacity-90"></div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+      <div className="max-w-7xl  mx-auto grid grid-cols-1 lg:grid-cols-12 gap-16">
         {/* Items Gallery (Left Side) */}
         <div className="lg:col-span-8 space-y-12">
           {cart.items.map((item) => {

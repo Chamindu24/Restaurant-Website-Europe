@@ -18,6 +18,10 @@ const MenuDetails = () => {
     averageRating: 5,
     reviewCount: 0,
   });
+  // Random menu cards
+  const [randomMenus, setRandomMenus] = useState([]);
+  // Import MenuCard
+  // ...existing code...
 
   const menu = menus?.find((item) => item._id === id);
   
@@ -33,6 +37,15 @@ const MenuDetails = () => {
     }
     console.log('menu',menu)
   }, [menu]);
+
+  // Pick 3 random menu items (excluding current)
+  useEffect(() => {
+    if (menus && menus.length > 1) {
+      const filtered = menus.filter((item) => item._id !== id);
+      const shuffled = filtered.sort(() => 0.5 - Math.random());
+      setRandomMenus(shuffled.slice(0, 3));
+    }
+  }, [menus, id]);
 
   useEffect(() => {
     if (!menu) return;
@@ -363,6 +376,7 @@ const MenuDetails = () => {
                         </p>
                       </div>
                       <div className="flex gap-0.5">
+
                         {renderStars(review.rating)}
                       </div>
                     </div>
@@ -378,8 +392,42 @@ const MenuDetails = () => {
           </div>
         </div>
       </div>
+
+      
+    {/* Random Menu Cards Section */}
+    {randomMenus.length > 0 && (
+      <div className="max-w-8xl mx-auto px-6 md:px-4 pb-32">
+        <div className="flex flex-col items-center justify-center 
+                        text-center px-4 sm:px-6 lg:px-8 
+                        pb-12 sm:pb-12">
+
+          <h2 className="text-3xl sm:text-4xl md:text-5xl 
+                        font-serif font-semibold 
+                        text-[#1A1A1A] 
+                        leading-tight">
+            Discover More Dishes
+          </h2>
+
+          <div className="mt-4 h-[3px] w-16 sm:w-20 
+                          bg-gradient-to-r 
+                          from-[#BFA37E] to-[#D6C2A1] 
+                          rounded-full">
+          </div>
+
+        </div> 
+
+        <div className="grid md:grid-cols-3 gap-6">
+          {randomMenus.map((item) => (
+            <MenuCard key={item._id} menu={item} />
+          ))}
+        </div>
+      </div>
+    )}
     </div>
+
+
   );
 };
 
+import MenuCard from "../components/MenuCard";
 export default MenuDetails;

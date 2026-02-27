@@ -135,7 +135,7 @@ const MenuDetails = () => {
   return (
     <div className="min-h-screen bg-[#FBF5EB] text-[#1A1A1A]  ">
       {/* Navigation */}
-      <div className="max-w-8xl mx-auto px-10 py-10">
+      <div className="max-w-8xl mx-auto px-4 md:px-10 py-10">
         <button
           onClick={() => navigate("/menu")}
           className="flex cursor-pointer items-center gap-2 text-[#1A1A1A]  transition-all  group"
@@ -145,17 +145,17 @@ const MenuDetails = () => {
         </button>
       </div>
 
-      <div className="max-w-8xl mx-auto px-10">
+      <div className="max-w-8xl mx-auto px-4 md:px-10">
         <div className="grid lg:grid-cols-12 gap-16 items-start">
           
           {/* LEFT: Image Section */}
           <div className="lg:col-span-7">
             <div className="relative group overflow-hidden rounded-sm ">
-              <img
-                src={menu.image}
-                alt={menu.name}
-                className="w-full h-[600px] object-cover "
-              />
+            <img
+              src={menu.image}
+              alt={menu.name}
+              className="w-full h-[450px] sm:h-[450px] md:h-[450px] lg:h-[600px] object-cover"
+            />
               <div className="absolute top-0 left-0 w-full h-full border-[16px] border-white/10 pointer-events-none"></div>
               {menu.isAvailable && (
                 <div className="absolute top-6 left-6 bg-stone-900 rounded-md text-white px-6 py-1 tracking-[0.1em] text-xs font-bold uppercase">
@@ -248,7 +248,7 @@ const MenuDetails = () => {
       </div>
 
       {/* Reviews Section */}
-      <div className="max-w-7xl mx-auto  mt-24 pb-20">
+      <div className="max-w-7xl mx-auto px-6 md:px-0 mt-24 pb-20">
         <div className="border-t border-gray-900/50 pt-16 grid lg:grid-cols-12 gap-16">
           
           {/* Left Column: Summary Stats */}
@@ -352,7 +352,7 @@ const MenuDetails = () => {
                 <p className="text-center py-10 text-gray-500 font-medium">No reviews yet. Be the first to grace our wall.</p>
               ) : (
                 reviews.map((review) => (
-                  <div key={review._id} className="group border-b border-gray-500 pb-10 last:border-0">
+                  <div key={review._id} className="group border-b px-4 md:px-0 border-gray-500 pb-10 last:border-0">
                     <div className="flex justify-between items-start mb-4">
                       <div>
                         <h4 className="font-bold text-md uppercase tracking-[0.15em] text-[#1A1A1A]">

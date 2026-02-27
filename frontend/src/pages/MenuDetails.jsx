@@ -135,7 +135,7 @@ const MenuDetails = () => {
   return (
     <div className="min-h-screen bg-[#FBF5EB] text-[#1A1A1A]  ">
       {/* Navigation */}
-      <div className="max-w-8xl mx-auto px-4 md:px-10 py-10">
+      <div className="max-w-8xl mx-auto px-5 md:px-10 py-10">
         <button
           onClick={() => navigate("/menu")}
           className="flex cursor-pointer items-center gap-2 text-[#1A1A1A]  transition-all  group"
@@ -145,7 +145,7 @@ const MenuDetails = () => {
         </button>
       </div>
 
-      <div className="max-w-8xl mx-auto px-4 md:px-10">
+      <div className="max-w-8xl mx-auto px-5 md:px-10">
         <div className="grid lg:grid-cols-12 gap-16 items-start">
           
           {/* LEFT: Image Section */}

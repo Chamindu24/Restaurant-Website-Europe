@@ -61,3 +61,27 @@ html {
 .animate-subtle-zoom {
   animation: subtle-zoom 20s infinite ease-in-out;
 }
+
+/* ===== BLACKPEPPER SIGNET GOLD & BLACK CURSORS ===== */
+
+/* Default: Large, Sharp Gold-Bordered Onyx Arrow */
+* {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 40 40" fill="none"><path d="M4 2 L18 36 L24 24 L36 18 L4 2 Z" fill="%23111" stroke="%23C5A059" stroke-width="2.5" stroke-linejoin="round"/></svg>') 4 2, auto;
+}
+
+/* Pointer: Tilted Royal Hand with Signet Ring Detail */
+/* 40px size with corrected hotspot for accurate pointing */
+a,
+button,
+.cursor-pointer,
+[role="button"],
+select {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 60 60" fill="none"><path d="M15 50 C15 50 10 48 8 40 L6 25 C6 23 8 22 10 22 C12 22 14 23 15 25 L16 35 L16 6 C16 3 19 2 21 2 C23 2 26 3 26 6 L26 25 L28 22 C28 20 31 19 33 19 C35 19 37 20 37 22 L37 28 L39 25 C39 23 42 22 44 22 C46 22 48 23 48 25 L48 32 L49 28 C49 26 52 25 54 25 C56 25 58 26 58 28 L58 45 C58 55 45 60 35 60 L15 50 Z" fill="%23111" stroke="%23C5A059" stroke-width="2.5" stroke-linejoin="round"/><circle cx="53" cy="38" r="3" fill="%23C5A059"/></svg>') 6 4, pointer;
+}
+
+/* Text Input: Sophisticated Gold & Black I-Beam */
+input[type="text"], 
+textarea, 
+[contenteditable="true"] {
+  cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="36" viewBox="0 0 24 36"><rect x="10" y="4" width="4" height="28" fill="%23111" stroke="%23C5A059" stroke-width="1.5"/><line x1="6" y1="4" x2="18" y2="4" stroke="%23C5A059" stroke-width="2"/><line x1="6" y1="32" x2="18" y2="32" stroke="%23C5A059" stroke-width="2"/></svg>') 12 18, text;
+}

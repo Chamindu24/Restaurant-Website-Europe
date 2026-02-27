@@ -84,6 +84,8 @@ const Navbar = () => {
     { name: "Contact", path: "/contact" },
   ];
 
+  const isActivePath = (path) => location.pathname === path;
+
   return (
     <>
       <nav
@@ -123,6 +125,14 @@ const Navbar = () => {
                   }`}
                 >
                   {link.name}
+                  <span
+                    className={`absolute left-0 -bottom-0.5 h-[2px] w-full bg-[#C5A059] transition-all duration-300 ${
+                      isActivePath(link.path)
+                        ? "opacity-100 scale-x-100"
+                        : "opacity-0 scale-x-0"
+                    }`}
+                    style={{ transformOrigin: "left" }}
+                  />
                   {link.name === "Rewards" && activeOffersCount > 0 && (
                     <span className="absolute -top-2 -right-4 bg-red-600 text-white text-[12px] rounded-full w-4 h-4 flex items-center justify-center font-bold shadow-sm">
                       {activeOffersCount}

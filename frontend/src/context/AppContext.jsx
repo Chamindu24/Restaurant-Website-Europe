@@ -268,17 +268,7 @@ const AppContextProvider = ({ children }) => {
       const { data } = await axios.get("/api/menu/all");
 
       if (data.success) {
-        // Backend now returns menus and offers separately
         setMenus(data.menuItems);
-        
-        // If offers are included in the response, update them too
-        if (data.offers) {
-          setOffers(data.offers);
-          const activeCount = data.offers.filter((offer) => offer.isActive).length;
-          setActiveOffersCount(activeCount);
-          setOffersLoaded(true);
-        }
-        
         setMenusLoaded(true);
       } else {
         console.log("Failed to fetch menus");
@@ -310,17 +300,7 @@ const AppContextProvider = ({ children }) => {
     }
   };
 
-  const fetchActiveOffersCount = async () => {
-    try {
-      const { data } = await axios.get("/api/offer/all");
-      if (data.success) {
-        const activeCount = data.offers.filter((offer) => offer.isActive).length;
-        setActiveOffersCount(activeCount);
-      }
-    } catch (error) {
-      console.log("Error fetching offers:", error);
-    }
-  };
+
 
   const isAuth = async () => {
     try {

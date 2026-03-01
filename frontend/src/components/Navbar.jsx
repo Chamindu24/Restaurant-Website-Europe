@@ -12,12 +12,14 @@ import {
   Tag,
 } from "lucide-react";
 import toast from "react-hot-toast";
+import CartDrawer from "./CartDrawer";
 
 const Navbar = () => {
   const { navigate, user, setUser, axios, cartCount, activeOffersCount } = useContext(AppContext);
   const location = useLocation();
   const isHome = location.pathname === "/";
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const profileRef = useRef(null);
@@ -40,13 +42,14 @@ const Navbar = () => {
   // Close mobile menu on route change
   useEffect(() => {
     setIsMenuOpen(false);
+    setIsCartOpen(false);
   }, [location.pathname]);
 
   // Lock body scroll when mobile menu is open
   useEffect(() => {
-    document.body.style.overflow = isMenuOpen ? "hidden" : "";
+    document.body.style.overflow = isMenuOpen || isCartOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
-  }, [isMenuOpen]);
+  }, [isMenuOpen, isCartOpen]);
 
   // Close profile dropdown on outside click (mobile tap)
   useEffect(() => {
@@ -89,7 +92,7 @@ const Navbar = () => {
   return (
     <>
       <nav
-        className={`sticky top-0 z-[100] transition-colors duration-500 ${
+        className={`sticky top-0 z-100 transition-colors duration-500 ${
           isScrolled
             ? "bg-[#FCFBFA] border-b border-[#E5E0D8]"
             : "bg-black border-b border-transparent"
@@ -126,7 +129,7 @@ const Navbar = () => {
                 >
                   {link.name}
                   <span
-                    className={`absolute left-0 -bottom-0.5 h-[2px] w-full bg-[#C5A059] transition-all duration-300 ${
+                    className={`absolute left-0 -bottom-0.5 h-0.5 w-full bg-[#C5A059] transition-all duration-300 ${
                       isActivePath(link.path)
                         ? "opacity-100 scale-x-100"
                         : "opacity-0 scale-x-0"
@@ -147,7 +150,7 @@ const Navbar = () => {
 
               {/* Cart Icon */}
               <button
-                onClick={() => navigate("/cart")}
+                onClick={() => setIsCartOpen(true)}
                 className={`relative cursor-pointer p-2 transition-colors group ${
                   isScrolled
                     ? "text-[#4A4A4A] hover:text-[#C5A059]"
@@ -241,7 +244,7 @@ const Navbar = () => {
 
       {/* Mobile Full-Screen Menu Overlay */}
       <div
-        className={`fixed inset-0 z-[99] md:hidden transition-all duration-500 ${
+        className={`fixed inset-0 z-99 md:hidden transition-all duration-500 ${
           isMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
       >
@@ -337,6 +340,8 @@ const Navbar = () => {
           </div>
         </div>
       </div>
+
+      <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </>
   );
 };

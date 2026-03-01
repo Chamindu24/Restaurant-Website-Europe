@@ -3,21 +3,28 @@ import { AppContext } from "../context/AppContext";
 import {
   calculateOffersWithDiscounts,
   getBestOffer,
+  getOffersThatApply,
   getApplicableOffers,
 } from "../utils/offerCalculations";
 
 const MenuCard = ({ menu }) => {
-  const { addToCart, navigate, offers } = useContext(AppContext);
+  const { addToCart, navigate, offers, offersLoaded } = useContext(AppContext);
   const [isOffersExpanded, setIsOffersExpanded] = useState(false);
 
   const handleCardClick = () => {
     navigate(`/menu-details/${menu._id}`);
   };
 
-  // Get all applicable offers for this menu item
+  // Get offers that apply to this item (for display/badge)
+  const offersForDisplay = getOffersThatApply(menu, offers);
+  
+  // Get currently valid offers (for discount calculation)
   const applicableOffers = getApplicableOffers(menu, offers);
-  const offersWithValues = calculateOffersWithDiscounts(menu.price, 1, applicableOffers);
-  const bestOffer = getBestOffer(menu.price, 1, applicableOffers);
+  
+  // Use valid offers for calculations, fallback to all applicable if none valid
+  const offersToUse = applicableOffers.length > 0 ? applicableOffers : offersForDisplay;
+  const offersWithValues = calculateOffersWithDiscounts(menu.price, 1, offersToUse);
+  const bestOffer = getBestOffer(menu.price, 1, offersToUse);
   const discountedPrice = bestOffer ? bestOffer.discountedPrice : null;
 
   return (
@@ -32,7 +39,7 @@ const MenuCard = ({ menu }) => {
       />
       
       {/* TOP LEFT - London Royal Red Offer Badge */}
-      {offersWithValues && offersWithValues.length > 0 && (
+      {offersForDisplay && offersForDisplay.length > 0 && (
         <div className="absolute top-7 left-4 z-20">
           <div className="relative group">
             {/* Subtle soft red glow instead of harsh gold */}
@@ -44,7 +51,7 @@ const MenuCard = ({ menu }) => {
 
                 <div>
                   <span className="text-white text-[10px] font-bold uppercase tracking-wider">
-                    {offersWithValues.length > 1 ? `${offersWithValues.length} Offers` : "Special Offer"}
+                    {offersForDisplay.length > 1 ? `${offersForDisplay.length} Offers` : "Special Offer"}
                   </span>
                 </div>
                 {bestOffer && (

@@ -115,7 +115,20 @@ export const calculateDiscountForItem = (price, offer, quantity = 1) => {
 };
 
 /**
- * Get all valid offers that apply to a menu item
+ * Get offers that apply to a menu item (for display purposes - ignores time/date validity)
+ * Used for Rewards page and offer display
+ */
+export const getOffersThatApply = (menuItem, allOffers) => {
+  if (!menuItem || !allOffers || allOffers.length === 0) return [];
+
+  return allOffers.filter(offer => {
+    // Only check: active status and if it applies to this item
+    return offer.isActive && doesOfferApplyToItem(offer, menuItem);
+  });
+};
+
+/**
+ * Get all valid offers that apply to a menu item (strict validation for cart/purchase)
  */
 export const getApplicableOffers = (menuItem, allOffers, currentDate = new Date(), userInfo = null) => {
   if (!menuItem || !allOffers || allOffers.length === 0) return [];

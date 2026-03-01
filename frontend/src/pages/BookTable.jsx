@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect } from "react";
 import { AppContext } from "../context/AppContext";
 import toast from "react-hot-toast";
-import { Diamond } from "lucide-react";
+import { Diamond, ChevronLeft, ChevronRight } from "lucide-react";
 
 const BookTable = () => {
   const { axios, navigate, user } = useContext(AppContext);
@@ -17,6 +17,8 @@ const BookTable = () => {
   });
   
   const [selectedDateForBooking, setSelectedDateForBooking] = useState(""); // Date picker for booking view
+  const [calendarMonth, setCalendarMonth] = useState(new Date().getMonth());
+  const [calendarYear, setCalendarYear] = useState(new Date().getFullYear());
 
   // Restore booking details from localStorage on mount
   useEffect(() => {
@@ -66,21 +68,17 @@ const BookTable = () => {
       }));
       
       // Fetch booked seats for the selected date
-      fetchBookedSeats(selectedDate);
+      if (selectedDate) {
+        fetchBookedSeats(selectedDate);
+      }
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDrawerOpen, user, selectedDateForBooking]);
 
   // Fetch booked seats when date changes
   const handleDateChange = (e) => {
     const newDate = e.target.value;
     setFormData({...formData, date: newDate});
-    fetchBookedSeats(newDate);
-  };
-
-  // Handle date selection from the main date picker
-  const handleBookingDateChange = (e) => {
-    const newDate = e.target.value;
-    setSelectedDateForBooking(newDate);
     fetchBookedSeats(newDate);
   };
 
@@ -138,33 +136,126 @@ const BookTable = () => {
         navigate("/my-bookings");
       }
     } catch (error) {
+      console.log("Booking error:", error);
       toast.error("An error occurred during booking.");
     }
   };
 
+  // Calendar Helper Functions
+  const getDaysInMonth = (month, year) => {
+    return new Date(year, month + 1, 0).getDate();
+  };
+
+  const getFirstDayOfMonth = (month, year) => {
+    return new Date(year, month, 1).getDay();
+  };
+
+  const handlePrevMonth = () => {
+    if (calendarMonth === 0) {
+      setCalendarMonth(11);
+      setCalendarYear(calendarYear - 1);
+    } else {
+      setCalendarMonth(calendarMonth - 1);
+    }
+  };
+
+  const handleNextMonth = () => {
+    if (calendarMonth === 11) {
+      setCalendarMonth(0);
+      setCalendarYear(calendarYear + 1);
+    } else {
+      setCalendarMonth(calendarMonth + 1);
+    }
+  };
+
+  const handleDateSelect = (day) => {
+    const selectedDate = new Date(calendarYear, calendarMonth, day);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    if (selectedDate < today) {
+      toast.error("Cannot book past dates.");
+      return;
+    }
+    
+    const formattedDate = `${calendarYear}-${String(calendarMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    setSelectedDateForBooking(formattedDate);
+    fetchBookedSeats(formattedDate);
+  };
+
+  const isDateSelected = (day) => {
+    if (!selectedDateForBooking) return false;
+    const selected = new Date(selectedDateForBooking);
+    return selected.getDate() === day && 
+           selected.getMonth() === calendarMonth && 
+           selected.getFullYear() === calendarYear;
+  };
+
+  const isDatePast = (day) => {
+    const date = new Date(calendarYear, calendarMonth, day);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return date < today;
+  };
+
+  const monthNames = ["January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"];
+  const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
   return (
-    <div className="min-h-screen bg-[#FFFFFF] border-t-6 border-[#D4AF37] text-[#1a1a1a]">
+    <div className="min-h-screen bg-[#FFFFFF]  text-[#1a1a1a]">
       {/* --- PREMIUM HERO SECTION --- */}
-        <div
-          className="relative h-[70vh] bg-cover bg-fixed bg-center flex items-center justify-center overflow-hidden"
-          style={{
-            backgroundImage: "url('https://images.unsplash.com/photo-1643066873594-4df339b2e232?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')",
-          }}
-        >
-          <div className="absolute inset-0 bg-[#0a0a0a]/40 backdrop-blur-[1px]"></div>
-          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent  to-[#ffffff]"></div>
-          
-          <div className="relative text-center z-10 px-4">
-            <span className="text-[#ffffff] uppercase tracking-[0.4em] text-xs mb-4 block font-medium animate-fade-in">
-              Reserve Your Experience • Fine Dining
+<div
+  className="relative h-[50vh] sm:h-[60vh] md:h-[70vh] lg:h-[75vh] bg-cover bg-fixed bg-center flex items-center justify-center overflow-hidden bg-[#F9F8F6]"
+  style={{
+    backgroundImage: "url('/tablecover.png')",
+  }}
+>
+  {/* A 'Mist' overlay: Creates a bright, airy feeling while keeping text readable */}
+  <div className="absolute inset-0 bg-[#F9F8F6]/70 backdrop-blur-[0.5px]"></div>
+  
+  {/* Elegant 'Soft Light' gradient for a high-end editorial look */}
+  <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-[#F9F8F6]/40"></div>
+  
+{/* The Main "Menu Card" - Very common in high-end British branding */}
+  <div className="relative z-10 max-w-6xl w-full mx-4 p-8 md:p-16 bg-white/60 backdrop-blur-xs border border-white/50 shadow-[0_20px_50px_rgba(0,0,0,0.05)]">
+    
+        {/* Decorative Gold Leaf Corners (Responsive) */}
+        <div className="absolute top-3 left-3 sm:top-4 sm:left-4 md:top-6 md:left-6 
+                        w-8 h-8 sm:w-10 sm:h-10 md:w-14 md:h-14 
+                        border-t border-l border-amber-700"></div>
+
+        <div className="absolute top-3 right-3 sm:top-4 sm:right-4 md:top-6 md:right-6 
+                        w-8 h-8 sm:w-10 sm:h-10 md:w-14 md:h-14 
+                        border-t border-r border-amber-700"></div>
+
+      <header className=" relative max-w-[1300px] mx-auto px-4 md:px-6">
+        {/* The "Signature" Style Heading Group */}
+        <div className="flex flex-col items-center text-center border-b border-stone-100 ">
+          <h1 className="text-2xl sm:text-5xl md:text-7xl font-light tracking-[0.05em] uppercase mb-4 md:mb-8 text-stone-900">
+            Your 
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-700 via-amber-500 to-amber-700">
+              &nbsp;Seat Awaits
             </span>
-            <h1 className="text-5xl md:text-8xl font-serif italic tracking-tight text-white mb-8">
-              The <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500"  >Gourmet</span> Table
-            </h1>
+          </h1>
+        </div>
 
-
+        {/* The "Signature" Style Description */}
+        <div className="text-center px-0 md:px-2 mt-2 md:mt-2">
+          <p className="text-stone-600 font-semibold tracking-wide font-serif italic text-base sm:text-lg md:text-2xl leading-relaxed max-w-4xl mx-auto">
+            "View our table arrangement below and select your desired vantage point. Our interactive map allows you to curate your perfect dining atmosphere."
+          </p>
+          
+          {/* Subtle Golden Dots for the interactive hint */}
+          <div className="mt-8 flex justify-center gap-1.5">
+            <div className="w-1 h-1 bg-amber-600 rounded-full animate-pulse"></div>
+            <div className="w-1 h-1 bg-amber-500/50 rounded-full"></div>
+            <div className="w-1 h-1 bg-amber-400/20 rounded-full"></div>
           </div>
         </div>
+      </header>
+  </div>
+</div>
         {/* --- OVERLAPPING IMAGE SECTION --- */}
         <div className="relative max-w-6xl mx-auto px-6 -mt-32 z-10">
           <div className="bg-white  rounded-sm ">
@@ -182,36 +273,137 @@ const BookTable = () => {
           <div className="lg:col-span-3">
             <h2 className="text-md uppercase font-medium tracking-widest text-gray-800 mb-8 border-b pb-4">01. Select Your Booking Date</h2>
             
-            {/* Date Selector */}
-            <div className="mb-10 p-6 bg-gradient-to-r from-[#f2d696]/10 to-[#c4a661]/10 border border-[#c4a661]/30 rounded-lg">
-              <div className="flex flex-col sm:flex-row gap-6 items-center">
-                <div className="flex-1">
-                  <label className="text-[12px] uppercase tracking-[0.2em] text-gray-800 block mb-3">Select Date to Check Availability</label>
-                  <input 
-                    type="date" 
-                    value={selectedDateForBooking}
-                    onChange={handleBookingDateChange}
-                    className="w-full cursor-pointer border border-gray-300 rounded px-4 py-3 focus:outline-none focus:border-[#c4a661] transition-colors"
-                  />
+            {/* Premium Calendar */}
+            <div className="mb-10 max-w-3xl p-6 bg-gradient-to-br from-[#1a1a1a] via-[#2a2a2a] to-[#1a1a1a] border border-[#D4AF37]  relative overflow-hidden rounded-sm">
+              {/* Decorative corner accents */}
+              <div className="absolute top-0 left-0 w-12 h-12 border-t-2 border-l-2 border-[#D4AF37]/30"></div>
+              <div className="absolute top-0 right-0 w-12 h-12 border-t-2 border-r-2 border-[#D4AF37]/30"></div>
+              <div className="absolute bottom-0 left-0 w-12 h-12 border-b-2 border-l-2 border-[#D4AF37]/30"></div>
+              <div className="absolute bottom-0 right-0 w-12 h-12 border-b-2 border-r-2 border-[#D4AF37]/30"></div>
+              
+              {/* Calendar Header */}
+              <div className="flex items-center justify-between mb-6 pb-4 border-b border-[#D4AF37]/30">
+                <button 
+                  onClick={handlePrevMonth}
+                  className="p-1.5 hover:bg-[#D4AF37]/20 rounded-full transition-all duration-300 group"
+                >
+                  <ChevronLeft className="w-8 h-8 text-[#D4AF37] group-hover:scale-110 transition-transform" />
+                </button>
+                
+                <div className="text-center">
+                  <h3 className="text-2xl font-serif font-semibold italic text-[#D4AF37] mb-0.5">
+                    {monthNames[calendarMonth]}
+                  </h3>
+                  <p className="text-xs text-white uppercase tracking-[0.25em]">{calendarYear}</p>
                 </div>
-                {selectedDateForBooking && bookedSeats.length > 0 && (
-                  <div className="text-center sm:text-right">
-                    <p className="text-xs text-red-600 font-semibold uppercase">⚠ {bookedSeats.length} seats booked</p>
-                    <p className="text-xs text-gray-600 mt-1">{9 * 6 - bookedSeats.length} seats available</p>
-                  </div>
-                )}
-                {selectedDateForBooking && bookedSeats.length === 0 && (
-                  <div className="text-center sm:text-right">
-                    <p className="text-xs text-green-600 font-semibold uppercase">✓ All seats available</p>
-                  </div>
-                )}
+                
+                <button 
+                  onClick={handleNextMonth}
+                  className="p-1.5 hover:bg-[#D4AF37]/20 rounded-full transition-all duration-300 group"
+                >
+                  <ChevronRight className="w-8 h-8 text-[#D4AF37] group-hover:scale-110 transition-transform" />
+                </button>
               </div>
+
+              {/* Day Names */}
+              <div className="grid grid-cols-7 gap-1.5 mb-3">
+                {dayNames.map(day => (
+                  <div key={day} className="text-center py-1.5">
+                    <span className="text-[12px] font-bold uppercase tracking-wider text-[#D4AF37]">
+                      {day}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Calendar Grid */}
+              <div className="grid grid-cols-7 gap-2">
+                {/* Empty cells for days before month starts */}
+                {[...Array(getFirstDayOfMonth(calendarMonth, calendarYear))].map((_, i) => (
+                  <div key={`empty-${i}`} className="aspect-square" />
+                ))}
+                
+                {/* Actual days */}
+                {[...Array(getDaysInMonth(calendarMonth, calendarYear))].map((_, i) => {
+                  const day = i + 1;
+                  const isPast = isDatePast(day);
+                  const isSelected = isDateSelected(day);
+                  const isToday = new Date().getDate() === day && 
+                                  new Date().getMonth() === calendarMonth && 
+                                  new Date().getFullYear() === calendarYear;
+                  
+                  return (
+                    <button
+                      key={day}
+                      onClick={() => handleDateSelect(day)}
+                      disabled={isPast}
+                      className={`aspect-square rounded-sm border transition-all duration-300 flex items-center justify-center font-serif text-sm relative group overflow-hidden
+                        ${isPast 
+                          ? 'border-gray-700/30 bg-gray-800/10 text-gray-700 cursor-not-allowed opacity-30' 
+                          : isSelected
+                          ? 'border-[#D4AF37] bg-[#D4AF37] text-[#1a1a1a] font-bold shadow-[0_0_15px_rgba(212,175,55,0.4)] scale-105 z-10'
+                          : 'border-white/10 bg-white/5 text-white hover:border-[#D4AF37] hover:bg-[#D4AF37]/10 hover:scale-105 cursor-pointer'
+                        }`}
+                    >
+                      <span className={`relative z-10 ${isSelected ? 'font-black' : ''}`}>{day}</span>
+                      
+                      {/* Today indicator ring */}
+                      {isToday && !isSelected && !isPast && (
+                        <div className="absolute inset-0 border-2 border-[#D4AF37]/50 rounded-sm"></div>
+                      )}
+                      
+                      {/* Selected indicator - Royal Crown */}
+                      {isSelected && (
+                        <div className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-[#1a1a1a] border border-[#D4AF37] rounded-full flex items-center justify-center">
+                          <div className="w-1 h-1 bg-[#D4AF37] rounded-full animate-pulse" />
+                        </div>
+                      )}
+                      
+                      {/* Hover gradient overlay */}
+                      {!isPast && !isSelected && (
+                        <div className="absolute inset-0 bg-gradient-to-br from-[#D4AF37]/0 via-[#D4AF37]/0 to-[#D4AF37]/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Calendar Footer - Compact Availability */}
+              {selectedDateForBooking && (
+                <div className="mt-6 pt-4 border-t border-[#D4AF37]/30">
+                  <div className="flex items-center justify-between text-sm">
+                    <div className="flex-1">
+                      <p className="text-[14px] font-semibold uppercase tracking-wider text-[#D4AF37] mb-0.5">Selected</p>
+                      <p className="text-lg font-semibold font-serif italic text-white leading-tight">
+                        {new Date(selectedDateForBooking).toLocaleDateString('en-GB', { 
+                          day: 'numeric', 
+                          month: 'short',
+                          year: 'numeric'
+                        })}
+                      </p>
+                    </div>
+                    <div className="text-right bg-[#D4AF37]/10 border border-[#D4AF37]/30 px-3 py-2 rounded">
+                      {bookedSeats.length > 0 ? (
+                        <div>
+                          <p className="text-[12px] uppercase tracking-wider text-red-400 font-bold">⚠ {bookedSeats.length} Booked</p>
+                          <p className="text-md font-semibold text-white mt-0.5">{9 * 6 - bookedSeats.length} Available</p>
+                        </div>
+                      ) : (
+                        <div>
+                          <p className="text-[12px] uppercase tracking-wider text-green-400 font-bold">✓ Available</p>
+                          <p className="text-md font-semibold text-white mt-0.5">All Seats Open</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             <h2 className="text-md uppercase font-medium tracking-widest text-gray-800 mb-8 border-b pb-4">02. Select Your Table & Seats</h2>
             
 
-<div className="text-center mb-8 md:mb-16">
+            <div className="text-center mb-8 md:mb-16">
               <p className="text-[11px] font-black uppercase tracking-[0.3em] text-[#bc9437] mb-2">Step 01</p>
               <h2 className="text-3xl md:text-4xl font-serif font-black text-[#1a1a1a] tracking-tight italic underline decoration-[#bc9437] decoration-4 underline-offset-8">
                 Select Your Table 

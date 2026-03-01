@@ -5,15 +5,15 @@ import { Link } from "react-router-dom";
 import { X, Gift } from "lucide-react";
 
 const Menus = () => {
-  const { menus, navigate, offers } = useContext(AppContext);
+  const { menus, navigate, offers, offersLoaded } = useContext(AppContext);
   const previewMenus = menus.slice(0, 6);
   
   const [showVoucher, setShowVoucher] = useState(false);
   const [voucherIndex, setVoucherIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
 
-  // Use all active offers from context instead of extracting from menus
-  const allOffers = offers || [];
+  // Only use offers if they're loaded
+  const allOffers = offersLoaded ? (offers || []) : [];
 
   useEffect(() => {
     const handleScroll = () => {

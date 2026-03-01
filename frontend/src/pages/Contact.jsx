@@ -31,29 +31,49 @@ const Contact = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FDFCFB] border-t-6 border-[#D4AF37] font-serif text-[#1A1A1A]">
+    <div className="min-h-screen bg-[#FDFCFB]  font-serif text-[#1A1A1A]">
       {/* --- HERO SECTION --- */}
-      <div
-        className="relative h-[60vh] bg-cover bg-fixed bg-center"
-        style={{
-          backgroundImage: "url('https://images.unsplash.com/photo-1514933651103-005eec06c04b?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')",
-        }}
-      >
-        <div className="absolute inset-0 bg-black/25 backdrop-blur-[1.8px]"></div>
-        <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-          <div className="text-center text-white px-4">
-            <h1 className="text-5xl md:text-7xl font-light tracking-[0.05em] uppercase mb-6">Contact the <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-700 via-amber-400 to-amber-700">Concierge</span></h1>
-            <div className="flex justify-center space-x-4 mb-8">
-              <div className="w-12 h-[2px] bg-gradient-to-r from-amber-700 via-amber-400 to-amber-700/80 self-center"></div>
-              <Diamond className="text-amber-400/80 drop-shadow-[0_2px_10px_rgba(251,191,36,0.35)] w-7 h-7" />
-              <div className="w-12 h-[2px] bg-gradient-to-r from-amber-700 via-amber-400 to-amber-700/80 self-center"></div>
-            </div>
-          </div>
-        </div>
-      </div>
+<div
+  className="relative h-[70vh] bg-cover bg-center overflow-hidden flex items-center justify-center md:justify-end px-4 md:px-20"
+  style={{
+    backgroundImage: "url('/contactcover.png')",
+  }}
+>
+    {/* A 'Mist' overlay: Creates a bright, airy feeling while keeping text readable */}
+  
+  {/* Elegant 'Soft Light' gradient for a high-end editorial look */}
+  <div className="absolute inset-0 bg-gradient-to-t from-white/90 via-transparent to-transparent"></div>
+  {/* Light Mode Overlay - Soft Ivory */}
+  <div className="absolute inset-0 bg-white/20 backdrop-blur-[2px]"></div>
+
+  {/* Refined Rectangular Card - Focused Width */}
+  <div className="relative z-10 w-full max-w-3xl bg-white/80 backdrop-blur-xl p-1 border-[0.5px] border-amber-700/20 shadow-sm">
+    
+    {/* Inner Frame */}
+    <div className="border border-amber-700/40 p-8 md:p-12 flex flex-col items-center text-center">
+      
+
+
+      <h1 className="text-4xl md:text-7xl font-serif font-light leading-tight uppercase text-stone-900 mb-4">
+        <span className="mr-2">The</span>
+        <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-700 via-amber-500 to-amber-700">
+          Concierge
+        </span>
+      </h1>
+
+      {/* Elegant Description - Focused & Impactful */}
+      <p className="text-stone-600 font-semibold tracking-wide font-serif italic text-base sm:text-lg md:text-2xl leading-relaxed max-w-4xl mx-auto">
+        "Our team is at your disposal to ensure every detail of your visit is executed with royal precision."
+      </p>
+
+
+
+    </div>
+  </div>
+</div>
 
       {/* --- MAIN CONTACT CARD --- */}
-      <div className="max-w-[88rem] mx-auto px-6 -mt-30 relative z-10 pb-20">
+      <div className="max-w-[88rem] mx-auto px-6 mt-24 relative z-10 pb-20">
         <div className="grid lg:grid-cols-5  rounded-sm overflow-hidden bg-white">
           
           {/* Section 1: Contact Info (The Royal Estate) */}

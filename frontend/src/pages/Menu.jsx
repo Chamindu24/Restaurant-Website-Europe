@@ -5,7 +5,7 @@ import MenuCard from "../components/MenuCard";
 import { useSearchParams } from "react-router-dom";
 
 const Menu = () => {
-  const { menus, categories } = useContext(AppContext);
+  const { menus, categories, offersLoaded } = useContext(AppContext);
   const [searchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -171,8 +171,15 @@ const Menu = () => {
           <div className="flex-1 h-[1px] bg-gradient-to-l from-transparent to-stone-200"></div>
         </div>
 
+        {/* Loading State for Offers */}
+        {!offersLoaded && (
+          <div className="flex items-center justify-center py-20">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600"></div>
+          </div>
+        )}
+
         {/* Menu Grid */}
-        {filteredMenus.length > 0 ? (
+        {offersLoaded && filteredMenus.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-12 sm:gap-y-16 md:gap-y-24 gap-x-6 md:gap-x-12">
             {filteredMenus.map((menu) => (
               <div key={menu._id} className="relative group">
@@ -180,7 +187,7 @@ const Menu = () => {
               </div>
             ))}
           </div>
-        ) : (
+        ) : offersLoaded ? (
           /* Empty State */
           <div className="text-center py-8 max-w-4xl mx-auto relative group">
             <div className="mb-4 flex justify-center">
@@ -230,7 +237,7 @@ const Menu = () => {
               </button>
             </div>
           </div>
-        )}
+        ) : null}
       </div>
     </div>
   );

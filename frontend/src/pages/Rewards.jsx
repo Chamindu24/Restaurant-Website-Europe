@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
 import { Tag, Calendar, Clock, Percent, Gift, Diamond } from "lucide-react";
 import MenuCard from "../components/MenuCard";
-import { getApplicableOffers } from "../utils/offerCalculations";
+import { getOffersThatApply } from "../utils/offerCalculations";
 
 const Rewards = () => {
   const { menus, offers, offersLoaded } = useContext(AppContext);
@@ -10,15 +10,17 @@ const Rewards = () => {
 
   // Update filtered menus whenever menus or offers change
   useEffect(() => {
-    if (menus.length > 0 && offers.length > 0) {
-      // Filter menu items that have applicable offers using the offer engine
+    if (menus.length > 0 && offers.length > 0 && offersLoaded) {
+      // Filter menu items that have applicable offers (ignoring time/date for display)
       const itemsWithOffers = menus.filter((item) => {
-        const applicableOffers = getApplicableOffers(item, offers);
+        const applicableOffers = getOffersThatApply(item, offers);
         return applicableOffers.length > 0;
       });
       setMenuItemsWithOffers(itemsWithOffers);
+    } else {
+      setMenuItemsWithOffers([]);
     }
-  }, [menus, offers]);
+  }, [menus, offers, offersLoaded]);
 
   const getOfferIcon = (offerType) => {
     switch (offerType) {
@@ -107,27 +109,68 @@ const Rewards = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#FDFCFB] py-20">
-      <div className="max-w-8xl mx-auto px-6 lg:px-10">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <div className="flex items-center justify-center gap-3 mb-4">
-            <Tag className="text-[#C5A059]" size={36} strokeWidth={1.5} />
-          </div>
-          <h1 className="text-5xl md:text-6xl font-serif italic font-bold text-[#1A1A1A] tracking-tight mb-4">
-            Exclusive Rewards
-          </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Discover our current offers and special promotions. Treat yourself to exceptional dining experiences.
-          </p>
-          {offersLoaded && offers.length > 0 && (
-            <div className="mt-6 inline-flex items-center gap-2 px-4 py-2 bg-[#C5A059]/10 border border-[#C5A059]/20 rounded-full">
-              <span className="text-sm font-semibold text-[#C5A059] uppercase tracking-wider">
-                {offers.length} Active {offers.length === 1 ? "Offer" : "Offers"}
-              </span>
-            </div>
-          )}
+    <div className="min-h-screen bg-[#FDFCFB]  pb-20">
+      <div className="max-w-8xl mx-auto ">
+      {/* Hero Header: The London Estate Concept */}
+      <div className="relative min-h-[450px] sm:min-h-[450px] md:min-h-[500px] lg:min-h-[550px] w-full bg-[#F9F7F2] flex items-center justify-center overflow-hidden">
+        
+        {/* Subtle Background Texture/Image */}
+        <div className="absolute inset-0 z-0">
+        <img 
+            src="/rewordcover3.png" 
+            alt="Background" 
+
+            className="w-full h-full object-cover scale-110"
+            style={{
+              WebkitMaskImage: 'linear-gradient(to right, rgba(0,0,0,0.20) 0%, rgba(0,0,0,1) 100%)',
+              maskImage: 'linear-gradient(to right, rgba(0,0,0,0.2) 0%, rgba(0,0,0,1) 100%)',
+            }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#F9F7F2]/80 via-transparent to-[#F9F7F2]/80"></div>
         </div>
+
+{/* Main Container: Widened to "Landscape" Rectangular Aspect Ratio */}
+<div className="relative z-10 w-[94%] max-w-5xl mx-auto bg-white/70 backdrop-blur-md p-1 border-[0.5px] border-[#C5A059]/30 shadow-[0_30px_100px_-20px_rgba(0,0,0,0.1)]">
+  
+  {/* Inner Decorative Border: Adjusted padding for a horizontal flow */}
+  <div className="border border-[#C5A059]/60 p-8 sm:p-12 md:py-16 md:px-24 flex flex-col md:flex-row items-center justify-between text-center md:text-left gap-10">
+
+    {/* Left Side: Typography & Description */}
+    <div className="flex-1">
+      <div className="mb-4 w-full">
+        <h2 className="text-[#1A1A1A] font-semibold font-serif italic text-xl sm:text-2xl md:text-3xl mb-1 tracking-wide">
+          The Curated
+        </h2>
+        <h1 className="text-[#1A1A1A] text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-serif font-light leading-none uppercase tracking-tighter">
+          Rewards
+        </h1>
+      </div>
+
+      <p className="text-gray-700 font-semibold font-serif italic text-base sm:text-lg md:text-xl max-w-lg leading-relaxed mb-0">
+        "Discover our current offers and special promotions. Treat yourself to exceptional dining experiences."
+      </p>
+    </div>
+
+    {/* Right Side: Modern Counter Badge (Positioned to the side for the rectangular look) */}
+    {offersLoaded && (
+      <div className="relative group cursor-default flex flex-col items-center shrink-0">
+        <div className="absolute -inset-4 border border-[#C5A059]/20 scale-110 opacity-0 group-hover:opacity-100 transition-all duration-700"></div>
+        <span className="text-[#1A1A1A] font-sans text-5xl md:text-7xl mb-1 tabular-nums font-light">
+          {offers.length.toString().padStart(2, '0')}
+        </span>
+        <span className="text-[#9c7225] text-[10px] md:text-[12px] uppercase tracking-[0.3em] font-bold">
+          Current Rewards
+        </span>
+      </div>
+    )}
+
+  </div>
+</div>
+
+        {/* Corner Accents: Floating Geometric Lines */}
+        <div className="absolute top-8 left-8 md:top-12 md:left-12 w-16 h-16 md:w-32 md:h-32 border-t border-l border-[#C5A059]/20 hidden sm:block"></div>
+        <div className="absolute bottom-8 right-8 md:bottom-12 md:right-12 w-16 h-16 md:w-32 md:h-32 border-b border-r border-[#C5A059]/20 hidden sm:block"></div>
+      </div>
 
         {/* Loading State */}
         {!offersLoaded && (

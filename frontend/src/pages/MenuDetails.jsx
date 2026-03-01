@@ -7,7 +7,7 @@ import { getApplicableOffers } from "../utils/offerCalculations";
 
 const MenuDetails = () => {
   const { id } = useParams();
-  const { menus, navigate, addToCart, user, axios, offers } = useContext(AppContext);
+  const { menus, navigate, addToCart, user, axios, offers, offersLoaded } = useContext(AppContext);
   const [quantity, setQuantity] = useState(1);
   const [reviews, setReviews] = useState([]);
   const [reviewsLoading, setReviewsLoading] = useState(false);

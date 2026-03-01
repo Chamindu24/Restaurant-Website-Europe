@@ -34,7 +34,7 @@ const Contact = () => {
     <div className="min-h-screen bg-[#FDFCFB]  font-serif text-[#1A1A1A]">
       {/* --- HERO SECTION --- */}
 <div
-  className="relative h-[70vh] bg-cover bg-center overflow-hidden flex items-center justify-center md:justify-end px-4 md:px-20"
+  className="relative h-[45vh] sm:h-[50vh] md:h-[50vh] lg:h-[60vh] xl:h-[70vh] bg-cover bg-fixed bg-center overflow-hidden flex items-center justify-center md:justify-end px-4 md:px-20"
   style={{
     backgroundImage: "url('/contactcover.png')",
   }}

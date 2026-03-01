@@ -20,8 +20,6 @@ const CartDrawer = ({ isOpen, onClose }) => {
     useContext(AppContext);
   const [expandedOffers, setExpandedOffers] = useState({});
 
-  const items = cart?.items || [];
-
   const toggleOfferExpand = (itemId) => {
     setExpandedOffers((prev) => ({
       ...prev,
@@ -33,7 +31,7 @@ const CartDrawer = ({ isOpen, onClose }) => {
     let subtotal = 0;
     let totalDiscount = 0;
 
-    items.forEach((item) => {
+    cart.items.forEach((item) => {
       const applicableOffers = getApplicableOffers(item.menuItem, offers);
       const bestOffer = getBestOffer(
         item.menuItem.price,
@@ -107,7 +105,7 @@ const CartDrawer = ({ isOpen, onClose }) => {
           </button>
         </div>
 
-        {items.length === 0 ? (
+        {(!cart || !cart.items || cart.items.length === 0) ? (
           <div className={`flex-1 flex flex-col items-center justify-center bg-[#FFFCF9] px-6 text-center relative overflow-hidden transition-all duration-700 delay-200 ${
             isOpen ? "opacity-100 scale-100" : "opacity-0 scale-95"
           }`}>
@@ -138,7 +136,7 @@ const CartDrawer = ({ isOpen, onClose }) => {
             <div className={`flex-1 overflow-y-auto px-6 py-6 space-y-6 bg-[#FFFCF9] transition-all duration-700 delay-150 ${
               isOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
             }`}>
-              {items.map((item, index) => {
+              {cart.items.map((item, index) => {
                 const applicableOffers = getApplicableOffers(item.menuItem, offers);
                 const offersWithValues = calculateOffersWithDiscounts(
                   item.menuItem.price,

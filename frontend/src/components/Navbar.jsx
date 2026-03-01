@@ -151,6 +151,7 @@ const Navbar = () => {
               {/* Cart Icon */}
               <button
                 onClick={() => setIsCartOpen(true)}
+                //onClick={() => navigate("/cart")}
                 className={`relative cursor-pointer p-2 transition-colors group ${
                   isScrolled
                     ? "text-[#4A4A4A] hover:text-[#C5A059]"

@@ -121,7 +121,7 @@ const Navbar = () => {
                 <Link
                   key={link.name}
                   to={link.path}
-                  className={`relative transition-all duration-300 font-serif italic text-md tracking-[0.2em] uppercase font-black ${
+                  className={`relative transition-all duration-300 font-serif  text-md tracking-[0.2em] uppercase font-black ${
                     isScrolled
                       ? "text-[#1f1e1e] hover:text-[#C5A059]"
                       : "text-[#EDEDED] hover:text-[#C5A059]"
@@ -129,7 +129,7 @@ const Navbar = () => {
                 >
                   {link.name}
                   <span
-                    className={`absolute left-0 -bottom-0.5 h-0.5 w-full bg-[#C5A059] transition-all duration-300 ${
+                    className={`absolute left-0 -bottom-1 h-0.5 w-full bg-[#C5A059] transition-all duration-300 ${
                       isActivePath(link.path)
                         ? "opacity-100 scale-x-100"
                         : "opacity-0 scale-x-0"
@@ -217,7 +217,7 @@ const Navbar = () => {
                 ) : (
                   <button
                     onClick={() => navigate("/auth")}
-                    className={`text-white cursor-pointer text-[12px] tracking-[0.2em] uppercase px-7 py-3 transition-all duration-500 font-serif italic font-semibold shadow-lg shadow-black/5 ${
+                    className={`text-white cursor-pointer text-[12px] tracking-[0.2em] uppercase px-7 py-3 transition-all duration-500 font-serif  font-semibold shadow-lg shadow-black/5 ${
                       isScrolled
                         ? "bg-[#1A1A1A] hover:bg-[#C5A059]"
                         : "bg-transparent border border-white/90 hover:bg-[#1A1A1A]"

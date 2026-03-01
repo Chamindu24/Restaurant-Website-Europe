@@ -124,14 +124,14 @@ export default function Footer() {
 
         {/* BOTTOM: ETIQUETTE & STATUS */}
         <div className="mt-auto pt-10 flex flex-col md:flex-row justify-between items-center gap-8 border-t border-white/10">
-          <div className="flex items-center gap-8 text-[9px] font-black tracking-[0.4em] uppercase text-stone-500">
+          <div className="flex items-center gap-4 md:gap-8 text-[9px] font-black tracking-[0.2em] md:tracking-[0.4em] uppercase text-stone-500">
             <span className="cursor-help underline underline-offset-4 decoration-stone-700">Dress Code: Formal</span>
             <span className="hidden sm:inline">AA Five Rosettes</span>
             <span className="hidden sm:inline">Forbes Five-Star</span>
           </div>
 
           <div className="text-center md:text-right">
-            <p className="text-[10px] tracking-[0.5em] uppercase text-stone-400">
+            <p className="text-[10px] tracking-[0.25em] md:tracking-[0.5em] uppercase text-stone-400">
               © {currentYear} Black Pepper London
             </p>
             <div className="flex justify-center md:justify-end gap-6 text-[8px] tracking-[0.2em] uppercase text-stone-700 mt-2">

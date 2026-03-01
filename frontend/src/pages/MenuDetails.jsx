@@ -1,13 +1,22 @@
 import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
-import { ArrowLeft, ShoppingCart, Minus, Plus, Tag, Award, Star } from "lucide-react";
+import {
+  ArrowLeft,
+  ShoppingCart,
+  Minus,
+  Plus,
+  Tag,
+  Award,
+  Star,
+} from "lucide-react";
 import { toast } from "react-hot-toast";
 import { getApplicableOffers } from "../utils/offerCalculations";
 
 const MenuDetails = () => {
   const { id } = useParams();
-  const { menus, navigate, addToCart, user, axios, offers, offersLoaded } = useContext(AppContext);
+  const { menus, navigate, addToCart, user, axios, offers, offersLoaded } =
+    useContext(AppContext);
   const [quantity, setQuantity] = useState(1);
   const [reviews, setReviews] = useState([]);
   const [reviewsLoading, setReviewsLoading] = useState(false);
@@ -24,7 +33,7 @@ const MenuDetails = () => {
   // ...existing code...
 
   const menu = menus?.find((item) => item._id === id);
-  
+
   // Get applicable offers for this menu item using the offer engine
   const applicableOffers = menu ? getApplicableOffers(menu, offers) : [];
 
@@ -35,7 +44,6 @@ const MenuDetails = () => {
         reviewCount: menu.reviewCount ?? 0,
       });
     }
-    console.log('menu',menu)
   }, [menu]);
 
   // Pick 3 random menu items (excluding current)
@@ -136,8 +144,15 @@ const MenuDetails = () => {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#FAF9F6]">
         <div className="text-center">
-          <h2 className="text-3xl font-serif text-[#1A1A1A] mb-4">Dish Not Found</h2>
-          <button onClick={() => navigate("/menu")} className="text-[#C5A059] border-b border-[#C5A059] pb-1">Return to Menu</button>
+          <h2 className="text-3xl font-serif text-[#1A1A1A] mb-4">
+            Dish Not Found
+          </h2>
+          <button
+            onClick={() => navigate("/menu")}
+            className="text-[#C5A059] border-b border-[#C5A059] pb-1"
+          >
+            Return to Menu
+          </button>
         </div>
       </div>
     );
@@ -148,68 +163,86 @@ const MenuDetails = () => {
   return (
     <div className="min-h-screen bg-[#FBF5EB] text-[#1A1A1A]  ">
       {/* Navigation */}
-      <div className="max-w-8xl mx-auto px-5 md:px-10 py-10">
+      {/* Back Button */}
+      <div className="max-w-8xl mx-auto px-6 sm:px-5 md:px-10 py-6 md:py-10">
         <button
           onClick={() => navigate("/menu")}
-          className="flex cursor-pointer items-center gap-2 text-[#1A1A1A]  transition-all  group"
+          className="flex cursor-pointer items-center gap-2 text-[#1A1A1A] transition-all group"
         >
           <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 duration-300 transition-transform" />
-          <span className="uppercase tracking-[0.1em] text-sm font-bold">Back to Menu</span>
+          <span className="uppercase tracking-[0.1em] text-sm font-bold">
+            Back to Menu
+          </span>
         </button>
       </div>
 
-      <div className="max-w-8xl mx-auto px-5 md:px-10">
-        <div className="grid lg:grid-cols-12 gap-16 items-start">
-          
-          {/* LEFT: Image Section */}
+      {/* Main Content */}
+      <div className="max-w-8xl mx-auto px-4 sm:px-5 md:px-10">
+        <div className="grid lg:grid-cols-12 gap-8 md:gap-16 items-start">
+          {/* LEFT: Image */}
           <div className="lg:col-span-7">
-            <div className="relative group overflow-hidden rounded-sm ">
-            <img
-              src={menu.image}
-              alt={menu.name}
-              className="w-full h-[450px] sm:h-[450px] md:h-[450px] lg:h-[600px] object-cover"
-            />
-              <div className="absolute top-0 left-0 w-full h-full border-[16px] border-white/10 pointer-events-none"></div>
+            <div className="relative group overflow-hidden rounded-sm">
+              <img
+                src={menu.image}
+                alt={menu.name}
+                className="w-full h-[350px] sm:h-[380px] md:h-[450px] lg:h-[600px] object-cover"
+              />
+              <div className="absolute top-0 left-0 w-full h-full border-[12px] md:border-[16px] border-white/10 pointer-events-none" />
               {menu.isAvailable && (
-                <div className="absolute top-6 left-6 bg-stone-900 rounded-md text-white px-6 py-1 tracking-[0.1em] text-xs font-bold uppercase">
+                <div className="absolute top-4 left-4 md:top-6 md:left-6 bg-stone-900 rounded-md text-white px-4 md:px-6 py-1 tracking-[0.1em] text-[10px] md:text-xs font-bold uppercase">
                   Available Today
                 </div>
               )}
             </div>
           </div>
 
-          {/* RIGHT: Details Section */}
-          <div className="lg:col-span-5 space-y-8">
-            <header className="border-b border-gray-400 pb-8">
-              <div className="flex items-center gap-3 mb-6">
-                <span className="h-1 w-10 bg-[#855d14]/60"></span>
-                <span className="text-[#855d14] font-black tracking-[0.3em] uppercase text-[14px]">
+          {/* RIGHT: Details */}
+          <div className="lg:col-span-5 space-y-6 md:space-y-8">
+            <header className="border-b border-gray-400 pb-6 md:pb-8">
+              <div className="flex items-center gap-3 mb-4 md:mb-6">
+                <span className="h-1 w-8 md:w-10 bg-[#855d14]/60" />
+                <span className="text-[#855d14] font-black tracking-[0.3em] uppercase text-[12px] md:text-[14px]">
                   {menu.category?.name || "Fine Dining"}
                 </span>
               </div>
-              <h1 className="text-5xl font-serif font-semibold leading-tight mb-4">{menu.name}</h1>
-              <p className="text-3xl  text-[#1A1A1A] tracking-tight">£{menu.price.toFixed(2)}</p>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif font-semibold leading-tight mb-3 md:mb-4">
+                {menu.name}
+              </h1>
+              <p className="text-2xl md:text-3xl text-[#1A1A1A] tracking-tight">
+                £{menu.price.toFixed(2)}
+              </p>
             </header>
 
             {/* Description */}
-            <div className="space-y-4">
-              <h3 className="uppercase tracking-[0.2em] text-xs font-black text-gray-600">Description</h3>
-              <p className="text-xl leading-relaxed font-medium text-gray-800">
+            <div className="space-y-3 md:space-y-4">
+              <h3 className="uppercase tracking-[0.2em] text-xs font-black text-gray-600">
+                Description
+              </h3>
+              <p className="text-base md:text-xl leading-relaxed font-medium text-gray-800">
                 {menu.description}
               </p>
             </div>
 
-            {/* Applicable Offers from Offer Engine */}
+            {/* Offers */}
             {applicableOffers?.length > 0 && (
-              <div className="space-y-4">
-                <h3 className="uppercase tracking-[0.2em] text-xs font-black text-gray-600">Exclusive Offers</h3>
+              <div className="space-y-3 md:space-y-4">
+                <h3 className="uppercase tracking-[0.2em] text-xs font-black text-gray-600">
+                  Exclusive Offers
+                </h3>
                 <div className="grid gap-3">
                   {applicableOffers.map((offer) => (
-                    <div key={offer._id} className="flex items-center gap-4 p-4 border border-[#C5A059] bg-[#F9F9F9] rounded-sm">
-                      <Tag className="w-5 h-5 text-[#C5A059]" />
+                    <div
+                      key={offer._id}
+                      className="flex items-start gap-3 md:gap-4 p-3 md:p-4 border border-[#C5A059] bg-[#F9F9F9] rounded-sm"
+                    >
+                      <Tag className="w-4 h-4 md:w-5 md:h-5 text-[#C5A059] mt-0.5 shrink-0" />
                       <div>
-                        <p className="font-bold text-sm uppercase tracking-wider">{offer.title}</p>
-                        <p className="text-xs text-gray-600 font-medium">{offer.description}</p>
+                        <p className="font-bold text-xs md:text-sm uppercase tracking-wider">
+                          {offer.title}
+                        </p>
+                        <p className="text-xs text-gray-600 font-medium mt-0.5">
+                          {offer.description}
+                        </p>
                       </div>
                     </div>
                   ))}
@@ -217,98 +250,116 @@ const MenuDetails = () => {
               </div>
             )}
 
-            {/* Quantity Selector & Checkout */}
-            <div className="bg-[#F9F9F9] border border-gray-400 p-8  space-y-6">
+            {/* Quantity & Checkout */}
+            <div className="bg-[#F9F9F9] border border-gray-400 p-5 md:p-8 space-y-5 md:space-y-6">
               <div className="flex items-center justify-between">
-                <span className="font-bold uppercase tracking-widest text-sm text-gray-500">Quantity</span>
+                <span className="font-bold uppercase tracking-widest text-xs md:text-sm text-gray-500">
+                  Quantity
+                </span>
                 <div className="flex items-center border border-gray-300">
-                  <button 
-                    onClick={() => setQuantity(q => Math.max(1, q - 1))}
-                    className="p-3 hover:bg-gray-100 transition-colors"
-                  ><Minus className="w-4 h-4" /></button>
-                  <span className="px-6 font-bold text-lg">{quantity}</span>
-                  <button 
-                    onClick={() => setQuantity(q => q + 1)}
-                    className="p-3 hover:bg-gray-100 transition-colors"
-                  ><Plus className="w-4 h-4" /></button>
+                  <button
+                    onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+                    className="p-3 md:p-3 hover:bg-gray-100 transition-colors active:bg-gray-200"
+                  >
+                    <Minus className="w-4 h-4" />
+                  </button>
+                  <span className="px-5 md:px-6 font-bold text-base md:text-lg">
+                    {quantity}
+                  </span>
+                  <button
+                    onClick={() => setQuantity((q) => q + 1)}
+                    className="p-3 md:p-3 hover:bg-gray-100 transition-colors active:bg-gray-200"
+                  >
+                    <Plus className="w-4 h-4" />
+                  </button>
                 </div>
               </div>
 
-              <div className="pt-6 border-t border-gray-100">
-                <div className="flex justify-between items-end mb-6">
-                  <span className="text-gray-500 font-bold uppercase tracking-widest text-md">Total Price.</span>
-                  <span className="text-5xl font-serif font-semibold text-[#7c5712]">£{totalPrice}</span>
+              <div className="pt-5 md:pt-6 border-t border-gray-100">
+                <div className="flex justify-between items-end mb-5 md:mb-6">
+                  <span className="text-gray-500 font-bold uppercase tracking-widest text-sm">
+                    Total Price.
+                  </span>
+                  <span className="text-4xl md:text-5xl font-serif font-semibold text-[#7c5712]">
+                    £{totalPrice}
+                  </span>
                 </div>
 
                 <button
                   disabled={!menu.isAvailable}
                   onClick={() => addToCart(menu._id, quantity)}
-                  className={`w-full cursor-pointer py-5 rounded-none font-bold tracking-[0.2em] uppercase text-sm transition-all duration-500 flex items-center justify-center gap-3 ${
+                  className={`w-full cursor-pointer py-4 md:py-5 rounded-none font-bold tracking-[0.2em] uppercase text-xs md:text-sm transition-all duration-500 flex items-center justify-center gap-3 ${
                     menu.isAvailable
-                      ? "bg-[#1A1A1A] text-white hover:bg-[#C5A059] shadow-xl"
+                      ? "bg-[#1A1A1A] text-white hover:bg-[#C5A059] shadow-xl active:scale-[0.99]"
                       : "bg-gray-200 text-gray-400 cursor-not-allowed"
                   }`}
                 >
-                  <ShoppingCart className="w-5 h-5" />
+                  <ShoppingCart className="w-4 h-4 md:w-5 md:h-5" />
                   {menu.isAvailable ? "Add to Order" : "Currently Unavailable"}
                 </button>
               </div>
             </div>
-
-
           </div>
         </div>
       </div>
 
       {/* Reviews Section */}
-      <div className="max-w-7xl mx-auto px-6 md:px-0 mt-24 pb-20">
-        <div className="border-t border-gray-900/50 pt-16 grid lg:grid-cols-12 gap-16">
-          
-          {/* Left Column: Summary Stats */}
-          <div className="lg:col-span-4 space-y-8">
+      <div className="max-w-7xl mx-auto px-6 sm:px-6 md:px-0 mt-16 md:mt-24 pb-16 md:pb-20">
+        <div className="border-t border-gray-900/50 pt-10 md:pt-16 grid lg:grid-cols-12 gap-10 md:gap-16">
+          {/* Left: Stats */}
+          <div className="lg:col-span-4 space-y-6 md:space-y-8">
             <div>
-              <h2 className="text-4xl font-serif font-semibold text-[#1A1A1A] mb-2">Customer Reviews</h2>
-              <p className="text-md text-gray-600 font-medium">Honest feedback from our happy clients.</p>
+              <h2 className="text-3xl md:text-4xl font-serif font-semibold text-[#1A1A1A] mb-2">
+                Customer Reviews
+              </h2>
+              <p className="text-sm md:text-md text-gray-600 font-medium">
+                Honest feedback from our happy clients.
+              </p>
             </div>
 
             <div className="flex items-end gap-4">
-              <div className="text-6xl font-serif text-[#1A1A1A]">
+              <div className="text-5xl md:text-6xl font-serif text-[#1A1A1A]">
                 {reviewStats.averageRating.toFixed(1)}
               </div>
               <div className="pb-2">
-                <div className="flex mb-1">{renderStars(Math.round(reviewStats.averageRating))}</div>
-                <p className="text-[11px] uppercase tracking-[0.25em] text-gray-900 font-bold">
+                <div className="flex mb-1">
+                  {renderStars(Math.round(reviewStats.averageRating))}
+                </div>
+                <p className="text-[10px] md:text-[11px] uppercase tracking-[0.25em] text-gray-900 font-bold">
                   Based on {reviewStats.reviewCount} Experiences
                 </p>
               </div>
             </div>
 
-            {/* Visual Rating Breakdown - The "Famous Site" Look */}
-            <div className="space-y-3 pt-6">
+            <div className="space-y-3 pt-4 md:pt-6">
               {[5, 4, 3, 2, 1].map((num) => (
-                <div key={num} className="flex items-center gap-4 text-sm font-medium text-gray-700">
+                <div
+                  key={num}
+                  className="flex items-center gap-3 md:gap-4 text-sm font-medium text-gray-700"
+                >
                   <span className="w-3">{num}</span>
                   <div className="flex-1 h-[2px] bg-gray-100">
-                    <div 
-                      className="h-full bg-[#C5A059]" 
-                      style={{ width: `${num === 5 ? 85 : num === 4 ? 10 : 5}%` }} // Replace with dynamic logic if available
-                    ></div>
+                    <div
+                      className="h-full bg-[#C5A059]"
+                      style={{
+                        width: `${num === 5 ? 85 : num === 4 ? 10 : 5}%`,
+                      }}
+                    />
                   </div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Right Column: Form & List */}
-          <div className="lg:col-span-8 space-y-12">
-            
-            {/* Premium Review Form */}
+          {/* Right: Form & Feed */}
+          <div className="lg:col-span-8 space-y-10 md:space-y-12">
+            {/* Review Form */}
             <form
               onSubmit={handleSubmitReview}
-              className="bg-[#F9F9F9] border border-gray-400 p-8 rounded-sm space-y-6"
+              className="bg-[#F9F9F9] border border-gray-400 p-5 md:p-8 rounded-sm space-y-5 md:space-y-6"
             >
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                <h3 className="text-sm uppercase tracking-[0.2em] text-[#1A1A1A] font-bold">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 md:gap-4">
+                <h3 className="text-xs md:text-sm uppercase tracking-[0.2em] text-[#1A1A1A] font-bold">
                   Write a Review
                 </h3>
                 <div className="flex items-center gap-2">
@@ -317,14 +368,17 @@ const MenuDetails = () => {
                       key={star}
                       type="button"
                       onClick={() => setRating(star)}
-                      className="transition-transform cursor-pointer hover:scale-110 focus:outline-none"
+                      className="transition-transform cursor-pointer hover:scale-110 active:scale-95 focus:outline-none"
                     >
                       <Star
-                        className={`w-5 h-5 ${rating >= star ? "text-[#C5A059]" : "text-gray-300"}`}
+                        className={`w-6 h-6 md:w-5 md:h-5 ${rating >= star ? "text-[#C5A059]" : "text-gray-300"}`}
                         fill={rating >= star ? "currentColor" : "none"}
                         style={
                           rating >= star
-                            ? { filter: "drop-shadow(0 0 8px rgba(197, 160, 89, 0.9))" }
+                            ? {
+                                filter:
+                                  "drop-shadow(0 0 8px rgba(197, 160, 89, 0.9))",
+                              }
                             : {}
                         }
                       />
@@ -338,50 +392,60 @@ const MenuDetails = () => {
                 value={comment}
                 onChange={(event) => setComment(event.target.value)}
                 placeholder="Describe your dining experience..."
-                className="w-full bg-transparent border-b-2 border-gray-400 py-3 text-base text-gray-800 placeholder:text-gray-500 focus:outline-none focus:border-[#C5A059] transition-colors resize-none font-medium"
+                className="w-full bg-transparent border-b-2 border-gray-400 py-3 text-sm md:text-base text-gray-800 placeholder:text-gray-500 focus:outline-none focus:border-[#C5A059] transition-colors resize-none font-medium"
               />
 
               <div className="flex items-center justify-between pt-2">
-
-
-
                 <button
                   type="submit"
                   disabled={!user || submitLoading}
-                  className="px-10 py-4 text-xs uppercase tracking-[0.2em] font-bold bg-[#1A1A1A] text-white hover:bg-[#C5A059] transition-all duration-500 disabled:bg-gray-300"
+                  className="w-full sm:w-auto px-8 md:px-10 py-4 text-xs uppercase tracking-[0.2em] font-bold bg-[#1A1A1A] text-white hover:bg-[#C5A059] transition-all duration-500 disabled:bg-gray-300 active:scale-[0.99]"
                 >
                   {submitLoading ? "Processing..." : "Post Review"}
                 </button>
               </div>
             </form>
 
-            {/* Review Feed */}
-            <div className="space-y-10">
+            {/* Reviews Feed */}
+            <div className="space-y-8 md:space-y-10">
               {reviewsLoading ? (
                 <div className="flex justify-center py-10">
-                  <div className="animate-pulse text-sm uppercase tracking-widest font-bold">Loading...</div>
+                  <div className="animate-pulse text-xs md:text-sm uppercase tracking-widest font-bold">
+                    Loading...
+                  </div>
                 </div>
               ) : reviews.length === 0 ? (
-                <p className="text-center py-10 text-gray-500 font-medium">No reviews yet. Be the first to grace our wall.</p>
+                <p className="text-center py-10 text-gray-500 font-medium text-sm md:text-base">
+                  No reviews yet. Be the first to grace our wall.
+                </p>
               ) : (
                 reviews.map((review) => (
-                  <div key={review._id} className="group border-b px-4 md:px-0 border-gray-500 pb-10 last:border-0">
-                    <div className="flex justify-between items-start mb-4">
+                  <div
+                    key={review._id}
+                    className="group border-b px-0 border-gray-500 pb-8 md:pb-10 last:border-0"
+                  >
+                    <div className="flex justify-between items-start mb-3 md:mb-4 gap-4">
                       <div>
-                        <h4 className="font-bold text-md uppercase tracking-[0.15em] text-[#1A1A1A]">
+                        <h4 className="font-bold text-sm md:text-md uppercase tracking-[0.15em] text-[#1A1A1A]">
                           {review.user?.name || "Distinguished Guest"}
                         </h4>
-                        <p className="text-[12px] font-bold text-gray-500 mt-1 uppercase">
-                          {new Date(review.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
+                        <p className="text-[11px] font-bold text-gray-500 mt-1 uppercase">
+                          {new Date(review.createdAt).toLocaleDateString(
+                            "en-GB",
+                            {
+                              day: "numeric",
+                              month: "long",
+                              year: "numeric",
+                            },
+                          )}
                         </p>
                       </div>
-                      <div className="flex gap-0.5">
-
+                      <div className="flex gap-0.5 shrink-0">
                         {renderStars(review.rating)}
                       </div>
                     </div>
                     {review.comment && (
-                      <p className="text-2xl text-gray-800 font-serif leading-relaxed font-semibold max-w-2xl">
+                      <p className="text-lg md:text-2xl text-gray-800 font-serif leading-relaxed font-semibold max-w-2xl">
                         "{review.comment}"
                       </p>
                     )}
@@ -393,39 +457,39 @@ const MenuDetails = () => {
         </div>
       </div>
 
-      
-    {/* Random Menu Cards Section */}
-    {randomMenus.length > 0 && (
-      <div className="max-w-8xl mx-auto px-6 md:px-4 pb-32">
-        <div className="flex flex-col items-center justify-center 
+      {/* Random Menu Cards Section */}
+      {randomMenus.length > 0 && (
+        <div className="max-w-8xl mx-auto px-6 md:px-4 pb-32">
+          <div
+            className="flex flex-col items-center justify-center 
                         text-center px-4 sm:px-6 lg:px-8 
-                        pb-12 sm:pb-12">
-
-          <h2 className="text-3xl sm:text-4xl md:text-5xl 
+                        pb-12 sm:pb-12"
+          >
+            <h2
+              className="text-3xl sm:text-4xl md:text-5xl 
                         font-serif font-semibold 
                         text-[#1A1A1A] 
-                        leading-tight">
-            Discover More Dishes
-          </h2>
+                        leading-tight"
+            >
+              Discover More Dishes
+            </h2>
 
-          <div className="mt-4 h-[3px] w-16 sm:w-20 
+            <div
+              className="mt-4 h-[3px] w-16 sm:w-20 
                           bg-gradient-to-r 
                           from-[#BFA37E] to-[#D6C2A1] 
-                          rounded-full">
+                          rounded-full"
+            ></div>
           </div>
 
-        </div> 
-
-        <div className="grid md:grid-cols-3 gap-6">
-          {randomMenus.map((item) => (
-            <MenuCard key={item._id} menu={item} />
-          ))}
+          <div className="grid md:grid-cols-3 gap-6">
+            {randomMenus.map((item) => (
+              <MenuCard key={item._id} menu={item} />
+            ))}
+          </div>
         </div>
-      </div>
-    )}
+      )}
     </div>
-
-
   );
 };
 

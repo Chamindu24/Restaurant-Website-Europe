@@ -244,99 +244,145 @@ const Navbar = () => {
 
       {/* Mobile Full-Screen Menu Overlay */}
       <div
-        className={`fixed inset-0 z-99 md:hidden transition-all duration-500 ${
+        className={`fixed inset-0 z-99 md:hidden transition-all duration-700 ${
           isMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
       >
-        {/* Backdrop */}
+        {/* Backdrop with smooth fade */}
         <div
-          className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+          className={`absolute inset-0 bg-gradient-to-br from-black/60 via-black/50 to-black/40 backdrop-blur-md transition-all duration-700 ${
+            isMenuOpen ? "opacity-100" : "opacity-0"
+          }`}
           onClick={() => setIsMenuOpen(false)}
         />
 
-        {/* Drawer — slides in from right */}
+        {/* Drawer — slides in from right with shadow */}
         <div
-          className={`absolute top-0 right-0 h-full w-4/5 max-w-xs bg-[#FCFBFA] shadow-2xl flex flex-col transition-transform duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] ${
+          className={`absolute top-0 right-0 h-full w-[85%] max-w-sm bg-gradient-to-b from-[#FDFCFB] to-[#F9F8F6] shadow-[-10px_0_50px_rgba(0,0,0,0.25)] flex flex-col transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
             isMenuOpen ? "translate-x-0" : "translate-x-full"
           }`}
         >
+          {/* Elegant decorative top border */}
+          <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-[#C5A059] to-transparent" />
+          
           {/* Drawer Header */}
-          <div className="flex items-center justify-between px-6 h-14 sm:h-16 border-b border-[#E5E0D8]">
-            <span className="font-serif italic text-[#C5A059] text-lg font-semibold tracking-wide">
-              Menu
-            </span>
-            <button onClick={() => setIsMenuOpen(false)} className="text-[#4A4A4A] p-1">
-              <X size={22} />
+          <div className="relative flex items-center justify-between px-6 py-5 border-b border-[#E5E0D8]/50">
+
+            <button 
+              onClick={() => setIsMenuOpen(false)} 
+              className="text-[#4A4A4A] hover:text-[#C5A059] p-2 hover:bg-[#C5A059]/10 rounded-full transition-all duration-300 hover:rotate-90"
+            >
+              <X size={22} strokeWidth={2} />
             </button>
           </div>
 
-          {/* Nav Links */}
-          <div className="flex flex-col px-6 pt-8 gap-1 flex-1 overflow-y-auto">
+          {/* Nav Links with staggered animation */}
+          <div className="flex flex-col px-6 pt-6 gap-0 flex-1 overflow-y-auto">
             {navLinks.map((link, i) => (
               <Link
                 key={link.name}
                 to={link.path}
                 onClick={() => setIsMenuOpen(false)}
-                className="py-4 border-b border-[#E5E0D8] text-[#2A2A2A] text-sm tracking-[0.25em] uppercase font-serif italic font-semibold hover:text-[#C5A059] transition-colors flex items-center justify-between"
-                style={{ transitionDelay: isMenuOpen ? `${i * 60}ms` : "0ms" }}
+                className={`relative group py-5 border-b border-[#E5E0D8]/50 text-[#2A2A2A] text-sm tracking-[0.2em] uppercase font-serif  font-bold hover:text-[#C5A059] hover:pl-2 transition-all duration-500 flex items-center justify-between overflow-hidden ${
+                  isActivePath(link.path) ? "text-[#C5A059]" : ""
+                } ${
+                  isMenuOpen ? "translate-x-0 opacity-100" : "translate-x-8 opacity-0"
+                }`}
+                style={{ 
+                  transitionDelay: isMenuOpen ? `${100 + i * 80}ms` : "0ms",
+                  transitionProperty: "all"
+                }}
               >
-                <span>{link.name}</span>
+                <span className="relative z-10 flex items-center gap-3">
+                  {isActivePath(link.path) && (
+                    <span className="w-1.5 h-1.5 bg-[#C5A059] rounded-full animate-pulse" />
+                  )}
+                  {link.name}
+                </span>
+                
+                {/* Hover gradient effect */}
+                <div className="absolute left-0 top-0 h-full w-0 bg-gradient-to-r from-[#C5A059]/10 to-transparent group-hover:w-full transition-all duration-500 -z-0" />
+                
                 {link.name === "Rewards" && activeOffersCount > 0 && (
-                  <span className="bg-[#C5A059] text-white text-[10px] rounded-full px-2 py-0.5 font-bold">
+                  <span className="bg-gradient-to-r from-[#C5A059] to-[#D4AF37] text-white text-[10px] rounded-full px-2.5 py-1 font-bold shadow-md animate-pulse">
                     {activeOffersCount}
                   </span>
                 )}
               </Link>
             ))}
 
-            {/* Account Section */}
-            <div className="mt-6">
+            {/* Account Section with fade in */}
+            <div className={`mt-8 transition-all duration-500 ${
+              isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
+            }`}
+            style={{ transitionDelay: isMenuOpen ? `${100 + navLinks.length * 80}ms` : "0ms" }}>
               {user ? (
-                <div className="flex flex-col gap-1">
-                  <div className="flex items-center gap-3 py-3 border-b border-[#E5E0D8]">
-                    <UserCircle size={22} strokeWidth={1.2} className="text-[#C5A059]" />
-                    <span className="font-serif text-[#1A1A1A] text-sm truncate">{user.name}</span>
+                <div className="flex flex-col gap-0">
+                  {/* User Profile Card */}
+                  <div className="flex items-center gap-4 p-4 mb-3 bg-gradient-to-r from-[#1A1A1A] to-[#2A2A2A] rounded-sm border border-[#C5A059]/20">
+                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#C5A059] to-[#D4AF37] flex items-center justify-center shadow-lg">
+                      <UserCircle size={26} strokeWidth={1.5} className="text-white" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-[#C5A059] font-bold mb-0.5">Welcome Back</p>
+                      <p className="font-serif text-white text-base truncate font-semibold">{user.name}</p>
+                    </div>
                   </div>
+                  
                   <Link
                     to="/my-bookings"
                     onClick={() => setIsMenuOpen(false)}
-                    className="flex items-center gap-3 py-4 border-b border-[#E5E0D8] text-sm tracking-[0.2em] uppercase text-gray-500 font-serif italic font-semibold hover:text-[#C5A059] transition-colors"
+                    className="group flex items-center gap-3 py-4 px-3 border-b border-[#E5E0D8]/50 text-sm tracking-[0.15em] uppercase text-gray-600 font-serif  font-semibold hover:text-[#C5A059] hover:bg-[#C5A059]/5 transition-all duration-300 rounded-sm"
                   >
-                    <Calendar size={16} className="opacity-60" />
+                    <Calendar size={18} className="opacity-70 group-hover:opacity-100 transition-opacity" />
                     My Bookings
                   </Link>
                   <Link
                     to="/my-orders"
                     onClick={() => setIsMenuOpen(false)}
-                    className="flex items-center gap-3 py-4 border-b border-[#E5E0D8] text-sm tracking-[0.2em] uppercase text-gray-500 font-serif italic font-semibold hover:text-[#C5A059] transition-colors"
+                    className="group flex items-center gap-3 py-4 px-3 border-b border-[#E5E0D8]/50 text-sm tracking-[0.15em] uppercase text-gray-600 font-serif  font-semibold hover:text-[#C5A059] hover:bg-[#C5A059]/5 transition-all duration-300 rounded-sm"
                   >
-                    <Package size={16} className="opacity-60" />
+                    <Package size={18} className="opacity-70 group-hover:opacity-100 transition-opacity" />
                     My Orders
                   </Link>
                   <button
                     onClick={() => { logout(); setIsMenuOpen(false); }}
-                    className="flex items-center gap-3 py-4 text-sm tracking-[0.2em] uppercase text-red-500 font-serif italic font-semibold text-left"
+                    className="group flex items-center gap-3 py-4 px-3 mt-2 text-sm tracking-[0.15em] uppercase text-red-500 font-serif  font-bold text-left hover:bg-red-50 transition-all duration-300 rounded-sm"
                   >
-                    <LogOut size={16} />
+                    <LogOut size={18} className="group-hover:translate-x-1 transition-transform" />
                     Logout
                   </button>
                 </div>
               ) : (
                 <button
                   onClick={() => { navigate("/auth"); setIsMenuOpen(false); }}
-                  className="w-full mt-4 bg-[#1A1A1A] hover:bg-[#C5A059] text-white text-xs tracking-[0.3em] uppercase py-4 font-serif italic font-semibold transition-colors duration-300"
+                  className="relative w-full mt-4 bg-gradient-to-r from-[#1A1A1A] to-[#2A2A2A] hover:from-[#C5A059] hover:to-[#D4AF37] text-white text-xs tracking-[0.3em] uppercase py-4 font-serif  font-bold transition-all duration-500 shadow-lg hover:shadow-xl hover:scale-[1.02] overflow-hidden group"
                 >
-                  Login / Register
+                  <span className="relative z-10">Login / Register</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#D4AF37] to-[#C5A059] opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 </button>
               )}
             </div>
           </div>
 
-          {/* Drawer Footer */}
-          <div className="px-6 py-6 border-t border-[#E5E0D8]">
-            <p className="text-[10px] tracking-[0.3em] text-stone-400 uppercase font-sans">
-              BlackPepper
-            </p>
+          {/* Drawer Footer with elegant design */}
+          <div className={`px-6 py-6 border-t border-[#E5E0D8]/50 bg-gradient-to-b from-transparent to-[#F5F3F0] transition-all duration-500 ${
+            isMenuOpen ? "translate-y-0 opacity-100" : "translate-y-4 opacity-0"
+          }`}
+          style={{ transitionDelay: isMenuOpen ? `${200 + navLinks.length * 80}ms` : "0ms" }}>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-[11px] tracking-[0.25em] text-[#1A1A1A] uppercase font-serif  font-bold mb-1">
+                  BlackPepper
+                </p>
+                <p className="text-[9px] tracking-[0.2em] text-stone-400 uppercase font-sans">
+                  Fine Dining Experience
+                </p>
+              </div>
+              <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#C5A059] to-[#D4AF37] flex items-center justify-center">
+                <span className="text-white text-xs font-bold">BP</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>

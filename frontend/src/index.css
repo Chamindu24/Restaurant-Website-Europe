@@ -1,7 +1,26 @@
 @config "../tailwind.config.js";
 @import "tailwindcss";
+
 * {
   font-family: "Montserrat", sans-serif;
+}
+
+/* Prevent horizontal scrolling globally */
+html, body {
+  overflow-x: hidden;
+  max-width: 100%;
+  position: relative;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* Prevent all direct children of body from causing overflow */
+#root {
+  overflow-x: hidden;
+  max-width: 100vw;
 }
 
 .font-serif {

@@ -36,7 +36,7 @@ const MenuCard = ({ menu }) => {
     <div className="group relative w-full bg-white flex flex-col border border-stone-200 transition-all duration-700 hover:border-stone-900">
       {/* TOP - The "Portrait Gallery" Section */}
       <div
-        className="relative h-[350px] sm:h-[380px] md:h-[420px] overflow-hidden cursor-pointer"
+        className="relative h-[420px] overflow-hidden cursor-pointer"
         onClick={handleCardClick}
       >
         <img
